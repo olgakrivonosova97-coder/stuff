@@ -1,9 +1,13 @@
 .claude/
 data_block.txt
 data_literal.js
+data_literal2.js
 tasks.json
 node_modules/
 package.json
 package-lock.json
 shot.js
+t.js
+t2.js
 preview_*.png
+p2_*.png
