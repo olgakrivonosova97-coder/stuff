@@ -307,7 +307,7 @@ const DATA = [
 // period и pctLabel — производные поля для отображения.
 function r(contour, stage, name, dur, start, finish, pred, members, responsible, status, pct){
   return { contour, stage, name, dur, start, finish, pred, members, responsible, status,
-           pct, period: start + ' → ' + finish,
+           pct, tasks: 1, period: start + ' → ' + finish,
            pctLabel: pct>0 ? pct + '%' : '' };
 }
 
