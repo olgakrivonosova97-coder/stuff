@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конструктор — скелет-движок</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ===== ТЕМЫ (CSS-переменные). Меняются переключателем в шапке ===== */
+  :root, :root[data-theme="business"] {
+    --bg:#eef1f5; --panel:#fff; --panel2:#f3f5f8; --groupBg:#f7f9fb;
+    --ink:#16233a; --mut:#69748a; --bord:#dde2ea; --bordSoft:#eaeef3;
+    --acc:#1d4e89; --accInk:#fff; --head:#13233f; --headInk:#eef2f8;
+    --good:#2c8a6b; --warn:#c0852d;
+  }
+  :root[data-theme="light"] {
+    --bg:#fafaf9; --panel:#fff; --panel2:#f5f5f4; --groupBg:#fafaf9;
+    --ink:#1c1917; --mut:#78716c; --bord:#e7e5e4; --bordSoft:#f0efee;
+    --acc:#b8512a; --accInk:#fff; --head:#fff; --headInk:#1c1917;
+    --good:#2c8a6b; --warn:#b8512a;
+  }
+  :root[data-theme="dark"] {
+    --bg:#0e1520; --panel:#16202e; --panel2:#1d2937; --groupBg:#19232f;
+    --ink:#e8eef6; --mut:#8896a8; --bord:#27323f; --bordSoft:#1f2937;
+    --acc:#4f9eff; --accInk:#0e1520; --head:#101924; --headInk:#e8eef6;
+    --good:#3fb488; --warn:#e0a24a;
+  }
+
+  body { background:var(--bg); color:var(--ink);
+    font:14px/1.4 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-variant-numeric: tabular-nums; }
+
+  .header { position:sticky; top:0; z-index:20; background:var(--head); color:var(--headInk);
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:12px 20px; border-bottom:1px solid rgba(0,0,0,.15); }
+  .header .kicker { font-size:11px; letter-spacing:.08em; text-transform:uppercase; opacity:.7; }
+  .header h1 { font-size:19px; font-weight:700; letter-spacing:-.01em; }
+  .header .total { text-align:right; }
+  .header .total .lbl { font-size:11px; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
+  .header .total .val { font-size:22px; font-weight:800; }
+  .themes { display:flex; gap:4px; background:rgba(255,255,255,.08); padding:3px; border-radius:9px; }
+  .themes button { border:none; background:transparent; color:var(--headInk); opacity:.7;
+    font:600 12px inherit; padding:5px 11px; border-radius:7px; cursor:pointer; }
+  .themes button.on { background:var(--headInk); color:var(--head); opacity:1; }
+
+  .body { display:grid; grid-template-columns:320px 1fr; align-items:start; gap:0; }
+  @media (max-width:900px){ .body { grid-template-columns:1fr; } }
+
+  .sidebar { position:sticky; top:60px; align-self:start; max-height:calc(100vh - 60px); overflow-y:auto;
+    background:var(--panel); border-right:1px solid var(--bord); padding:18px 16px 60px;
+    display:flex; flex-direction:column; gap:20px; }
+  @media (max-width:900px){ .sidebar { position:static; max-height:none; border-right:none; border-bottom:1px solid var(--bord);} }
+  .search { width:100%; padding:9px 12px; border:1px solid var(--bord); border-radius:9px;
+    background:var(--panel2); color:var(--ink); font:inherit; outline:none; }
+  .facet .ttl, .side-ttl { font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--mut); font-weight:700; margin-bottom:8px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; padding:5px 9px; border-radius:8px;
+    font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--bord); background:var(--panel2); color:var(--ink); }
+  .chip.on { border-color:var(--acc); background:var(--acc); color:var(--accInk); }
+  .chip .dot { width:8px; height:8px; border-radius:50%; flex:none; }
+  .chip .cnt { opacity:.6; font-size:11px; }
+  .scenario button { display:flex; align-items:center; gap:9px; width:100%; padding:7px 8px; border:none;
+    border-radius:8px; background:transparent; color:var(--ink); font:12.5px inherit; cursor:pointer; text-align:left; }
+  .scenario .box { width:16px;height:16px;flex:none;border-radius:5px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;border:1.5px solid var(--bord); }
+  .scenario button.on .box { background:var(--acc); border-color:var(--acc); color:var(--accInk); }
+  .scenario button.off { color:var(--mut); text-decoration:line-through; opacity:.65; }
+  .scenario .amt { margin-left:auto; font-size:11px; color:var(--mut); }
+  .reset { margin-top:6px; width:100%; padding:9px; border:1px solid var(--bord); border-radius:9px;
+    background:var(--panel); color:var(--mut); font:600 12.5px inherit; cursor:pointer; }
+
+  .main { padding:18px clamp(12px,2vw,22px); display:flex; flex-direction:column; gap:16px; min-width:0; }
+  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+  @media (max-width:1080px){ .kpis { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .kpis { grid-template-columns:1fr; } }
+  .kpi { background:var(--panel); border:1px solid var(--bord); border-radius:13px; padding:14px 16px; }
+  .kpi .lbl { font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--mut); }
+  .kpi .val { font-size:22px; font-weight:800; margin-top:4px; }
+  .kpi .sub { font-size:12px; color:var(--mut); margin-top:2px; }
+
+  .delta { display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:13px; }
+  .delta.save { border:1px solid var(--good); background:color-mix(in srgb, var(--good) 12%, var(--panel)); }
+  .delta.over { border:1px solid var(--warn); background:color-mix(in srgb, var(--warn) 12%, var(--panel)); }
+  .delta .ic { font-size:18px; } .delta .t { font-weight:700; } .delta .s { font-size:12px; color:var(--mut); }
+  .delta .v { margin-left:auto; font-size:20px; font-weight:800; }
+
+  .card { background:var(--panel); border:1px solid var(--bord); border-radius:13px; }
+  .card .cap { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px; }
+  .card .cap h2 { font-size:14px; font-weight:700; }
+  .segbtns { display:flex; gap:2px; background:var(--panel2); padding:3px; border-radius:9px; }
+  .segbtns button { border:none; background:transparent; color:var(--mut); font:600 12px inherit;
+    padding:4px 11px; border-radius:7px; cursor:pointer; }
+  .segbtns button.on { background:var(--acc); color:var(--accInk); }
+
+  .bars { padding:4px 18px 16px; display:flex; flex-direction:column; gap:9px; }
+  .bar { display:flex; align-items:center; gap:10px; }
+  .bar .name { width:200px; flex:none; font-size:12.5px; white-space:nowrap; overflow:hidden;
+    text-overflow:ellipsis; display:flex; align-items:center; gap:7px; }
+  @media (max-width:760px){ .bar .name { width:120px; } }
+  .bar .track { flex:1; height:20px; background:var(--panel2); border-radius:6px; overflow:hidden; }
+  .bar .fill { height:100%; border-radius:6px; }
+  .bar .amt { width:120px; text-align:right; font-weight:700; font-size:12.5px; }
+  .bar .pct { width:44px; text-align:right; color:var(--mut); font-size:12px; }
+  .bar .dot { width:8px;height:8px;border-radius:50%;flex:none; }
+
+  .table { overflow-x:auto; }
+  .table .inner { min-width:720px; }
+  .thead, .noderow, .leaf { display:grid; gap:10px; align-items:center; }
+  .thead { padding:11px 18px; background:var(--panel2); border-bottom:1px solid var(--bord);
+    font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--mut); font-weight:700; }
+  .thead .r, .noderow .r, .leaf .r { text-align:right; }
+  .noderow { padding:9px 18px; cursor:pointer; border-top:1px solid var(--bord); }
+  .noderow.lvl1 { background:var(--groupBg); padding-left:38px; }
+  .noderow .nm { font-weight:700; font-size:13px; display:flex; align-items:center; gap:9px; }
+  .noderow .chev { color:var(--mut); font-size:11px; transition:transform .15s; display:inline-block; }
+  .noderow.open .chev { transform:rotate(90deg); }
+  .leaf { padding:9px 18px 9px 54px; border-top:1px solid var(--bordSoft); }
+  .leaf .nm { font-size:12.5px; }
+  .leaf .desc { font-size:11px; color:var(--mut); }
+  .leaf .meta { font-size:11px; color:var(--mut); margin-top:2px; }
+  .leaf .meta b { color:var(--acc); font-weight:600; }
+  .struck { text-decoration:line-through; opacity:.5; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:10.5px; font-weight:700; color:#fff; white-space:nowrap; }
+  .tchip { display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; color:#fff; }
+  .qty { width:74px; padding:5px 7px; text-align:right; border-radius:7px; font:12.5px inherit;
+    border:1px solid var(--bord); background:var(--panel2); color:var(--ink); outline:none; }
+  .qty.edited { border-color:var(--acc); }
+  .pill { padding:3px 9px; border-radius:7px; font:700 10.5px inherit; cursor:pointer; white-space:nowrap;
+    border:1px solid var(--bord); background:transparent; color:var(--mut); }
+  .pill.off { border-color:var(--acc); background:var(--acc); color:var(--accInk); }
+  .muted { color:var(--mut); }
+  .empty { padding:44px; text-align:center; color:var(--mut); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =============================================================================
+   КОНСТРУКТОР — СКЕЛЕТ-ДВИЖОК
+   -----------------------------------------------------------------------------
+   Как адаптировать под свою предметную область:
+     1) DOMAIN  — описываешь область: подписи, иерархию, меры (числа), фасеты
+                  (фильтры), формулу пересчёта, статусы.
+     2) DATA    — массив «плоских» записей (одна запись = одна позиция/строка).
+                  Каждая запись должна содержать поля, на которые ссылается DOMAIN
+                  (все уровни hierarchy, все measures, все facets, itemLabel и т.д.).
+     3) ENGINE  — ниже; предметно-независим, трогать обычно не нужно.
+
+   Формула пересчёта («калькулятор»): для меры со scalesWithQty
+       эффективное значение = базовое * (изменённое_кол-во / базовое_кол-во)
+   Драйвер количества — DOMAIN.qtyKey (редактируемое поле в таблице).
+   Исключение из расчёта (сценарий) на любом уровне обнуляет вклад позиции.
+============================================================================= */
+
+/* ===== 1. DOMAIN — ОПИСАНИЕ ОБЛАСТИ (замени под свой проект) ================ */
+const DOMAIN = {
+  title:    'Конструктор — демо',
+  subtitle: 'Скелет-движок · замените DOMAIN и DATA',
+  currency: '₽',
+  bigUnit:  'млн',                       // компактная единица для крупных сумм
+
+  hierarchy: ['section', 'group'],       // уровни группировки: Раздел → Группа → Позиция
+  levelLabels: { section:'Раздел', group:'Группа' },
+
+  itemLabel: 'name',                     // заголовок позиции (лист)
+  itemSub:   'desc',                     // подпись под позицией
+
+  qtyKey:          'qty',                // редактируемый драйвер количества
+  headlineMeasure: 'cost',               // мера для главного итога в шапке
+
+  // меры (числовые поля). kind: 'count' | 'money' | 'num'
+  measures: [
+    { key:'qty',   label:'Кол-во',    kind:'count', editable:true },
+    { key:'hours', label:'Часы',      kind:'num',   unit:'ч', scalesWithQty:true },
+    { key:'cost',  label:'Стоимость', kind:'money', scalesWithQty:true, primary:true },
+  ],
+
+  // фасеты (фильтры в сайдбаре). colored:true — раскрашивать значения
+  facets: [
+    { key:'section', label:'Раздел' },
+    { key:'team',    label:'Исполнитель', colored:true },
+    { key:'status',  label:'Статус',      colored:true },
+  ],
+
+  breakdownDims: ['section', 'team', 'status'],   // разрезы бар-чарта
+
+  // доп. строки под позицией (аналог «Контроль:/Согласовант:»)
+  rowMeta: [ { key:'owner', label:'Ответственный' }, { key:'check', label:'Контроль' } ],
+
+  status: { on:'В расчёте', off:'Выключено' },     // подписи пилюли вкл/выкл
+};
+
+/* ===== 2. DATA — ЗАПИСИ (замени своими) ==================================== */
+const DATA = [
+  // section              group            name                         team        status       qty  hours  cost      owner        check          desc
+  r('Проектирование','Аналитика','Сбор требований',              'Команда A','Готово',     1, 40,  120000,'Иванов', 'Чек-лист',   'Интервью, реестр требований'),
+  r('Проектирование','Аналитика','Модель данных',                'Команда A','В работе',   1, 32,   96000,'Иванов', 'Ревью',      'ER-диаграмма, словарь полей'),
+  r('Проектирование','UX',       'Каркасы экранов',              'Команда B','В работе',   12,  8,   72000,'Петрова','Ревью',      'Wireframes ключевых экранов'),
+  r('Проектирование','UX',       'Прототип',                     'Команда B','План',       1, 24,   72000,'Петрова','—',          'Кликабельный прототип'),
+  r('Проектирование','UX',       'Дизайн-система',               'Команда B','План',       1, 40,  120000,'Петрова','Чек-лист',   'Токены, компоненты, гайд'),
+  r('Разработка',    'Frontend', 'Вёрстка компонентов',          'Команда C','В работе',   24,  6,  108000,'Сидоров','Ревью',      'Библиотека UI-компонентов'),
+  r('Разработка',    'Frontend', 'Страницы и роутинг',           'Команда C','План',       10, 10,  100000,'Сидоров','—',          'Сборка экранов из компонентов'),
+  r('Разработка',    'Frontend', 'Интеграция с API',             'Команда C','План',       8,  12,   96000,'Сидоров','Ревью',      'Запросы, состояние, ошибки'),
+  r('Разработка',    'Backend',  'Схема БД и миграции',          'Команда D','Готово',      1, 24,   84000,'Кузнецов','Чек-лист',  'PostgreSQL, миграции'),
+  r('Разработка',    'Backend',  'REST API',                     'Команда D','В работе',   14,  8,  112000,'Кузнецов','Ревью',     'CRUD, авторизация'),
+  r('Разработка',    'Backend',  'Фоновые задачи',               'Команда D','План',       6,  10,   72000,'Кузнецов','—',         'Очереди, планировщик'),
+  r('Разработка',    'QA',       'Тест-кейсы',                   'Команда E','В работе',   30,  2,   72000,'Орлова', 'Чек-лист',   'Функциональные сценарии'),
+  r('Разработка',    'QA',       'Автотесты',                    'Команда E','План',       15,  4,   90000,'Орлова', 'Ревью',      'e2e и unit-покрытие'),
+  r('Разработка',    'QA',       'Регресс перед релизом',        'Команда E','План',       1, 16,   48000,'Орлова', '—',          'Полный прогон'),
+];
+// хелпер-конструктор записи (порядок = комментарий выше)
+function r(section,group,name,team,status,qty,hours,cost,owner,check,desc){
+  return { section, group, name, team, status, qty, hours, cost, owner, check, desc };
+}
+
+/* ===== 3. ENGINE — ПРЕДМЕТНО-НЕЗАВИСИМОЕ ЯДРО ============================== */
+
+// --- палитра для авто-раскраски категорий ---
+const PALETTE = ['#1d4e89','#2c8a6b','#c0852d','#7d4fd1','#b8512a','#3a7ca5','#4f9eff','#9a6b3a','#5a6b82','#2c7a7b','#a23b72','#3d8168'];
+const colorCache = {};
+function colorFor(facetKey, value){
+  const ck = facetKey+'::'+value;
+  if(colorCache[ck]) return colorCache[ck];
+  const f = DOMAIN.facets.find(x=>x.key===facetKey);
+  if(f && f.colors && f.colors[value]) return (colorCache[ck]=f.colors[value]);
+  const vals = uniq(DATA.map(d=>d[facetKey])).sort();
+  return (colorCache[ck] = PALETTE[vals.indexOf(value) % PALETTE.length]);
+}
+const measureDef = k => DOMAIN.measures.find(m=>m.key===k);
+const uniq = a => [...new Set(a)];
+
+// --- форматтеры ---
+function fmtMoney(n){ return Math.round(n).toLocaleString('ru-RU')+' '+DOMAIN.currency; }
+function fmtBig(n){
+  if(Math.abs(n)>=1e6) return (n/1e6).toLocaleString('ru-RU',{maximumFractionDigits:1})+' '+DOMAIN.bigUnit+' '+DOMAIN.currency;
+  if(Math.abs(n)>=1e3) return Math.round(n/1e3).toLocaleString('ru-RU')+' тыс '+DOMAIN.currency;
+  return Math.round(n)+' '+DOMAIN.currency;
+}
+function fmtNum(n){ return (Math.round(n)||0).toLocaleString('ru-RU'); }
+function fmtMeasure(mKey, n){
+  const m = measureDef(mKey);
+  if(m.kind==='money') return fmtMoney(n);
+  if(m.kind==='num')   return fmtNum(n)+(m.unit?' '+m.unit:'');
+  return fmtNum(n);
+}
+
+// --- нормализация: id на каждую запись ---
+const RECORDS = DATA.map((d,i)=>({ ...d, _id:i }));
+
+// --- состояние ---
+const state = {
+  theme:'business',
+  search:'',
+  filters:{},                                   // { facetKey: Set(values) }
+  excluded:{},                                  // { nodeId | 'L:'+id : true }
+  qty:{},                                       // { leafId: newValue }
+  expanded:{ }, expandedInit:false,
+  dim: DOMAIN.breakdownDims[0],
+};
+DOMAIN.facets.forEach(f=>state.filters[f.key]=new Set());
+
+// --- калькулятор: коэффициент и эффективные меры ---
+function factor(rec){
+  const e = state.qty[rec._id], base = rec[DOMAIN.qtyKey];
+  return (e!=null && base>0) ? e/base : 1;
+}
+function effQty(rec){ const e=state.qty[rec._id]; return e!=null?e:rec[DOMAIN.qtyKey]; }
+function nodeId(path){ return 'N:'+path.join(' / '); }
+function leafActive(rec){
+  if(state.excluded['L:'+rec._id]) return false;
+  let p=[];
+  for(const lvl of DOMAIN.hierarchy){ p.push(rec[lvl]); if(state.excluded[nodeId(p)]) return false; }
+  return true;
+}
+function baseVal(rec, mKey){                    // значение без исключений (для «полной сметы»)
+  const m = measureDef(mKey);
+  return (rec[mKey]||0) * (m.scalesWithQty ? factor(rec) : 1);
+}
+function eff(rec, mKey){ return leafActive(rec) ? baseVal(rec, mKey) : 0; }
+
+// --- фильтрация ---
+function passFilter(rec){
+  for(const f of DOMAIN.facets){
+    const set = state.filters[f.key];
+    if(set.size && !set.has(rec[f.key])) return false;
+  }
+  const q = state.search.trim().toLowerCase();
+  if(q){
+    const hay = [rec[DOMAIN.itemLabel], rec[DOMAIN.itemSub], ...DOMAIN.hierarchy.map(l=>rec[l])].join(' ').toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+// --- дерево по иерархии ---
+function buildTree(recs, depth, parentPath){
+  const levels = DOMAIN.hierarchy;
+  const lvl = levels[depth];
+  const map = new Map();
+  recs.forEach(rec=>{ const k=String(rec[lvl]??'—'); if(!map.has(k)) map.set(k,[]); map.get(k).push(rec); });
+  const nodes=[];
+  map.forEach((items,k)=>{
+    const path=[...parentPath,k], last = depth===levels.length-1;
+    nodes.push({ key:k, path, depth, items,
+      children: last ? null : buildTree(items, depth+1, path),
+      leaves:   last ? items : null });
+  });
+  return nodes;
+}
+
+// --- агрегаты ---
+function sumEff(recs, mKey){ let t=0; recs.forEach(r=>{ t+=eff(r,mKey); }); return t; }
+function sumBase(recs, mKey){ let t=0; recs.forEach(r=>{ t+=baseVal(r,mKey); }); return t; }
+function nodeStruck(path){                       // узел вычеркнут, если он или любой предок исключён
+  let p=[];
+  for(const k of path){ p.push(k); if(state.excluded[nodeId(p)]) return true; }
+  return false;
+}
+
+/* ===== РЕНДЕР ============================================================= */
+const HM = DOMAIN.headlineMeasure;
+
+function view(){
+  const filtered = RECORDS.filter(passFilter);
+
+  // сценарий: полная база vs текущий сценарий (для дельты)
+  const baseAll = sumBase(RECORDS, HM);
+  const scenAll = sumEff(RECORDS, HM);
+  const delta = scenAll - baseAll;
+
+  // KPI
+  const shown = sumEff(filtered, HM);
+  const secondary = DOMAIN.measures.find(m=>m.scalesWithQty && m.key!==HM);
+  const activeLeaves = RECORDS.filter(leafActive).length;
+
+  return { filtered, baseAll, scenAll, delta, shown, secondary, activeLeaves };
+}
+
+function render(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const V = view();
+  const app = document.getElementById('app');
+
+  const gridCols = `minmax(220px,1fr) repeat(${DOMAIN.measures.length},minmax(72px,96px)) 118px`;
+
+  app.innerHTML = `
+    <div class="header">
+      <div>
+        <div class="kicker">${esc(DOMAIN.subtitle)}</div>
+        <h1>${esc(DOMAIN.title)}</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;">
+        <div class="total"><div class="lbl">Итог</div><div class="val">${fmtMoney(V.scenAll)}</div></div>
+        <div class="themes">
+          ${['business','light','dark'].map(t=>`<button data-act="theme" data-v="${t}" class="${state.theme===t?'on':''}">${{business:'Деловая',light:'Светлая',dark:'Тёмная'}[t]}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      <aside class="sidebar">
+        <input class="search" placeholder="Поиск…" value="${esc(state.search)}" data-act="search">
+        ${DOMAIN.facets.map(facetHtml).join('')}
+        <div class="scenario">
+          <div class="side-ttl">Сценарий · ${esc(DOMAIN.levelLabels[DOMAIN.hierarchy[0]]||'Разделы')}</div>
+          ${scenarioHtml()}
+        </div>
+        <button class="reset" data-act="reset">↺ Сбросить фильтры и сценарий</button>
+      </aside>
+
+      <main class="main">
+        <div class="kpis">
+          <div class="kpi"><div class="lbl">Итог сценария</div><div class="val">${fmtBig(V.scenAll)}</div><div class="sub">из ${fmtBig(V.baseAll)} полной базы</div></div>
+          <div class="kpi"><div class="lbl">Показано (фильтр)</div><div class="val">${fmtBig(V.shown)}</div><div class="sub">${V.filtered.length} позиций</div></div>
+          ${V.secondary?`<div class="kpi"><div class="lbl">${esc(V.secondary.label)}</div><div class="val">${fmtMeasure(V.secondary.key, sumEff(V.filtered,V.secondary.key))}</div><div class="sub">по фильтру</div></div>`:'<div class="kpi"></div>'}
+          <div class="kpi"><div class="lbl">Позиций активно</div><div class="val">${V.activeLeaves}</div><div class="sub">из ${RECORDS.length}</div></div>
+        </div>
+
+        ${deltaHtml(V)}
+
+        <div class="card">
+          <div class="cap"><h2>Структура</h2>
+            <div class="segbtns">${DOMAIN.breakdownDims.map(d=>`<button data-act="dim" data-v="${d}" class="${state.dim===d?'on':''}">${esc(facetLabel(d))}</button>`).join('')}</div>
+          </div>
+          <div class="bars">${barsHtml(V.filtered)}</div>
+        </div>
+
+        <div class="card table">
+          <div class="inner">
+            <div class="thead" style="grid-template-columns:${gridCols}">
+              <div>${esc(DOMAIN.levelLabels[DOMAIN.hierarchy[0]]||'')} / Позиция</div>
+              ${DOMAIN.measures.map(m=>`<div class="r">${esc(m.label)}</div>`).join('')}
+              <div class="r"></div>
+            </div>
+            ${V.filtered.length ? buildTree(V.filtered,0,[]).map(n=>nodeHtml(n,gridCols)).join('')
+                                : '<div class="empty">Нет позиций под текущие фильтры</div>'}
+          </div>
+        </div>
+      </main>
+    </div>`;
+}
+
+function facetLabel(key){ const f=DOMAIN.facets.find(x=>x.key===key); return f?f.label:key; }
+
+function facetHtml(f){
+  const vals = uniq(RECORDS.map(r=>r[f.key])).sort();
+  const set = state.filters[f.key];
+  return `<div class="facet"><div class="ttl">${esc(f.label)}</div><div class="chips">${
+    vals.map(v=>{
+      const cnt = RECORDS.filter(r=>r[f.key]===v).length;
+      const on = set.has(v);
+      const dot = f.colored ? `<span class="dot" style="background:${colorFor(f.key,v)}"></span>` : '';
+      return `<button class="chip ${on?'on':''}" data-act="filter" data-facet="${esc(f.key)}" data-v="${esc(v)}">${dot}${esc(v)} <span class="cnt">${cnt}</span></button>`;
+    }).join('')
+  }</div></div>`;
+}
+
+function scenarioHtml(){
+  const lvl = DOMAIN.hierarchy[0];
+  const groups = uniq(RECORDS.map(r=>r[lvl]));
+  return groups.map(g=>{
+    const id = nodeId([g]);
+    const on = !state.excluded[id];
+    const items = RECORDS.filter(r=>r[lvl]===g);
+    return `<button class="${on?'on':'off'}" data-act="toggleEx" data-id="${esc(id)}">
+      <span class="box">${on?'✓':''}</span><span>${esc(g)}</span>
+      <span class="amt">${fmtBig(sumEff(items,HM))}</span></button>`;
+  }).join('');
+}
+
+function deltaHtml(V){
+  if(Math.abs(V.delta) < 1 && !Object.values(state.excluded).some(Boolean)) return '';
+  const down = V.delta < 0;
+  const pct = V.baseAll ? Math.abs(V.delta/V.baseAll*100).toFixed(1) : '0';
+  return `<div class="delta ${down?'save':'over'}">
+    <span class="ic">${down?'▼':'▲'}</span>
+    <div><div class="t">${down?'Экономия по сценарию':'Превышение базы'}</div>
+    <div class="s">${down?'Снижение':'Рост'} на ${pct}% относительно полной базы</div></div>
+    <div class="v">${down?'−':'+'}${fmtBig(Math.abs(V.delta))}</div></div>`;
+}
+
+function barsHtml(filtered){
+  const dim = state.dim;
+  const agg = {};
+  filtered.forEach(r=>{ if(!leafActive(r)) return; const k=r[dim]; agg[k]=(agg[k]||0)+eff(r,HM); });
+  let entries = Object.entries(agg).sort((a,b)=>b[1]-a[1]);
+  if(entries.length>11){ const head=entries.slice(0,10); const rest=entries.slice(10).reduce((s,[,v])=>s+v,0); entries=head; if(rest>0) entries.push(['Прочее',rest]); }
+  const max = Math.max(1,...entries.map(e=>e[1])), tot = entries.reduce((s,[,v])=>s+v,0)||1;
+  const colored = DOMAIN.facets.find(f=>f.key===dim && f.colored);
+  if(!entries.length) return '<div class="empty">Нет данных</div>';
+  return entries.map(([k,v],i)=>{
+    const col = colored ? colorFor(dim,k) : PALETTE[i%PALETTE.length];
+    return `<div class="bar">
+      <div class="name"><span class="dot" style="background:${col}"></span>${esc(k)}</div>
+      <div class="track"><div class="fill" style="width:${(v/max*100).toFixed(1)}%;background:${col}"></div></div>
+      <div class="amt">${fmtBig(v)}</div><div class="pct">${(v/tot*100).toFixed(0)}%</div></div>`;
+  }).join('');
+}
+
+function nodeHtml(node, gridCols){
+  const id = nodeId(node.path);
+  const open = state.expanded[id] !== false && (state.expanded[id] || node.depth===0 ? true : false);
+  const isOpen = !!state.expanded[id];
+  const struck = nodeStruck(node.path);
+  const own = !state.excluded[id];
+  const cells = DOMAIN.measures.map(m=>{
+    if(m.key===DOMAIN.qtyKey && m.editable) return `<div class="r muted">${nodeQtyLabel(node)}</div>`;
+    return `<div class="r ${struck?'struck':''}" style="${m.primary?'font-weight:700':''}">${fmtMeasure(m.key, sumEff(node.items,m.key))}</div>`;
+  }).join('');
+  const row = `<div class="noderow ${node.depth>=1?'lvl1':''} ${isOpen?'open':''}" style="grid-template-columns:${gridCols}" data-act="expand" data-id="${esc(id)}">
+      <div class="nm ${struck?'struck':''}"><span class="chev">▶</span>${esc(node.key)}</div>
+      ${cells}
+      <div class="r"><button class="pill ${own?'':'off'}" data-act="toggleEx" data-id="${esc(id)}" data-stop="1">${own?DOMAIN.status.on:DOMAIN.status.off}</button></div>
+    </div>`;
+  let inner = '';
+  if(isOpen){
+    inner = node.children ? node.children.map(c=>nodeHtml(c,gridCols)).join('')
+                          : node.leaves.map(l=>leafHtml(l,gridCols)).join('');
+  }
+  return row + inner;
+}
+
+function nodeQtyLabel(node){
+  // показываем кол-во только если у всех листьев узла оно одинаковое и осмысленное
+  if(!node.leaves) return '';
+  const qs = uniq(node.leaves.map(l=>effQty(l)));
+  return (qs.length===1 && qs[0]>0) ? fmtNum(qs[0]) : '';
+}
+
+function leafHtml(rec, gridCols){
+  const struck = !leafActive(rec), own = !state.excluded['L:'+rec._id];
+  const colored = DOMAIN.facets.find(f=>f.colored);
+  const badge = colored ? `<span class="tchip" style="background:${colorFor(colored.key, rec[colored.key])}">${esc(rec[colored.key])}</span>` : '';
+  const meta = (DOMAIN.rowMeta||[]).map(m=> (rec[m.key] && rec[m.key]!=='—') ? `<span class="meta"><b>${esc(m.label)}:</b> ${esc(rec[m.key])}</span>` : '').filter(Boolean).join(' &nbsp; ');
+  const cells = DOMAIN.measures.map(m=>{
+    if(m.key===DOMAIN.qtyKey && m.editable){
+      const edited = state.qty[rec._id]!=null;
+      return `<div class="r"><input class="qty ${edited?'edited':''}" type="number" min="0" value="${effQty(rec)}" data-act="qty" data-id="${rec._id}"></div>`;
+    }
+    return `<div class="r ${struck?'struck':''}" style="${m.primary?'font-weight:700':''}">${fmtMeasure(m.key, eff(rec,m.key))}</div>`;
+  }).join('');
+  return `<div class="leaf" style="grid-template-columns:${gridCols}">
+    <div>
+      <div class="nm ${struck?'struck':''}">${esc(rec[DOMAIN.itemLabel])}</div>
+      ${rec[DOMAIN.itemSub]?`<div class="desc ${struck?'struck':''}">${esc(rec[DOMAIN.itemSub])}</div>`:''}
+      ${badge?`<div style="margin-top:4px">${badge}</div>`:''}
+      ${meta?`<div style="margin-top:3px">${meta}</div>`:''}
+    </div>
+    ${cells}
+    <div class="r"><button class="pill ${own?'':'off'}" data-act="toggleEx" data-id="L:${rec._id}">${own?DOMAIN.status.on:DOMAIN.status.off}</button></div>
+  </div>`;
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ===== СОБЫТИЯ (делегирование) =========================================== */
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-act]'); if(!el) return;
+  const act = el.dataset.act;
+  if(act==='theme'){ state.theme=el.dataset.v; render(); }
+  else if(act==='dim'){ state.dim=el.dataset.v; render(); }
+  else if(act==='filter'){ const s=state.filters[el.dataset.facet]; const v=el.dataset.v; s.has(v)?s.delete(v):s.add(v); render(); }
+  else if(act==='reset'){ DOMAIN.facets.forEach(f=>state.filters[f.key].clear()); state.search=''; state.excluded={}; state.qty={}; render(); }
+  else if(act==='expand'){ if(e.target.closest('[data-stop]')) return; const id=el.dataset.id; state.expanded[id]=!state.expanded[id]; render(); }
+  else if(act==='toggleEx'){ e.stopPropagation(); const id=el.dataset.id; state.excluded[id]?delete state.excluded[id]:state.excluded[id]=true; render(); }
+});
+document.addEventListener('change', e=>{
+  const el = e.target.closest('[data-act="qty"]'); if(!el) return;
+  const id=+el.dataset.id, v=el.value===''?null:Math.max(0,Math.round(+el.value));
+  if(v==null) delete state.qty[id]; else state.qty[id]=v;
+  render();
+});
+document.addEventListener('input', e=>{
+  const el = e.target.closest('[data-act="search"]'); if(!el) return;
+  state.search=el.value; render();
+  // вернуть фокус в поле поиска после перерисовки
+  const s=document.querySelector('[data-act="search"]'); if(s){ s.focus(); s.selectionStart=s.selectionEnd=s.value.length; }
+});
+
+/* первый рендер: раскрыть верхний уровень */
+uniq(RECORDS.map(r=>r[DOMAIN.hierarchy[0]])).forEach(g=>state.expanded[nodeId([g])]=true);
+render();
+</script>
+</body>
+</html>
