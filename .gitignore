@@ -2,3 +2,8 @@
 data_block.txt
 data_literal.js
 tasks.json
+node_modules/
+package.json
+package-lock.json
+shot.js
+preview_*.png
