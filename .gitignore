@@ -2,6 +2,9 @@
 data_block.txt
 data_literal*.js
 tasks*.json
+pdf907*.json
+pdf907.txt
+changes_907.csv
 audit.json
 pdf_dates.json
 node_modules/
@@ -13,6 +16,7 @@ t2.js
 tc.js
 tf.js
 tz.js
+gen.py
 preview_*.png
 p2_*.png
 fix_*.png
