@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>НЕЙРОПИЛОТ — СКУАД / ФНС России · презентация к 14.07.2026</title>
+<meta name="description" content="Нейропилот (СКУАД/ФНС): паспорт проекта, статус, проблемы и решения, показ продукта, план 2026–2027.">
+<!-- Локальные шрифты Inter (замена Google Fonts CDN) -->
+<link rel="stylesheet" href="assets/fonts/inter.css">
+<!-- Локальная Font Awesome (замена jsDelivr CDN) -->
+<link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+<!-- Стили презентации -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header id="brand-bar">
+  <span class="brand-logo"><span class="dot"></span>НЕЙРОПИЛОТ</span>
+  <span class="brand-sub">СКУАД · ФНС РОССИИ</span>
+</header>
+
+<nav id="dots" aria-label="Навигация по слайдам"></nav>
+
+<div class="nav-hint">
+  <button class="nav-btn" id="prevBtn" aria-label="Назад"><i class="fas fa-arrow-up"></i></button>
+  <span>Листайте · <span id="slide-counter">1 / 16</span></span>
+  <button class="nav-btn" id="nextBtn" aria-label="Вперёд"><i class="fas fa-arrow-down"></i></button>
+</div>
+
+<main>
+
+<!-- 1. ТИТУЛ -->
+<section class="slide" id="slide-hero" data-title="Титул">
+  <div class="slide-inner">
+    <p class="hero-kicker reveal">СКУАД · ФНС России</p>
+    <h1 class="hero-title reveal d1">НЕЙРОПИЛОТ</h1>
+    <p class="hero-sub reveal d2">ИИ-агентская платформа финансового расследования.<br>От реакции — к предиктивному управлению налоговыми процессами.</p>
+    <div class="hero-badges reveal d3">
+      <span class="hero-badge"><i class="fas fa-id-card"></i>&nbsp; Паспорт</span>
+      <span class="hero-badge"><i class="fas fa-triangle-exclamation"></i>&nbsp; Проблемы и решения</span>
+      <span class="hero-badge"><i class="fas fa-desktop"></i>&nbsp; Показ</span>
+      <span class="hero-badge"><i class="fas fa-calendar-check"></i>&nbsp; План 2026–2027</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ПАСПОРТ ПРОЕКТА -->
+<section class="slide" id="slide-passport" data-title="Паспорт">
+  <div class="glow cyan" style="width:400px;height:400px;top:-120px;right:-120px;opacity:0.22;"></div>
+  <div class="slide-inner" style="max-width:1240px;">
+    <span class="chapter reveal"><span class="num">00</span> Паспорт проекта · актуализация июль 2026</span>
+    <h2 class="slide-title reveal d1">СКУАД <span class="gradient-text">Нейропилот</span></h2>
+    <p class="lead reveal d2">ИИ для управления и администрирования долга: от реактивного контроля — к предиктивному. Проект обеспечен финансированием, вычислительными мощностями и командой.</p>
+
+    <div class="stat-row reveal d2" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="stat"><div class="big">14</div><div class="lbl">сценариев в реализации на 2026</div></div>
+      <div class="stat"><div class="big">4</div><div class="lbl">сценария уже в демонстрации на контуре</div></div>
+      <div class="stat"><div class="big">234</div><div class="lbl">витрины данных загружены (цель ~300)</div></div>
+      <div class="stat"><div class="big">01.04.27</div><div class="lbl">старт промышленной эксплуатации</div></div>
+    </div>
+
+    <div class="grid grid-2 reveal d3" style="margin-bottom:18px;">
+      <article class="card">
+        <h3><i class="fas fa-diagram-project" style="color:var(--cyan);margin-right:8px;"></i>Что делаем сейчас · июль 2026</h3>
+        <p style="margin-top:8px;">Опытная эксплуатация на контуре КОЭ АИС «Налог-3»: запущены основные компоненты, GPU-инфраструктура и авторизация ЕСАИП (22.06). Мультиагентная архитектура на MCP-серверах и RAG; единый чат «Инспектор — Нейропилот». В демонстрации — ЕФА, Перевод бизнеса, Цифровой помощник, ЦОП. Тестирование силами МИУДОЛ и Центров компетенций.</p>
+      </article>
+      <article class="card">
+        <h3><i class="fas fa-flag-checkered" style="color:var(--cyan);margin-right:8px;"></i>Что дальше · 2026 → 2027</h3>
+        <p style="margin-top:8px;">До 01.10.2026 — сдача функционала по госконтракту (единый интерфейс, приоритетные сценарии). Окт 2026 – фев 2027 — монтаж инфраструктуры промышленной эксплуатации. С 01.04.2027 — промышленная эксплуатация на АИС «Налог-3»: приказ ФНС, доступ пользователей. Далее — тиражирование на все сценарии работы с долгом.</p>
+      </article>
+    </div>
+
+    <div class="fin-strip reveal d3">
+      <div class="fin-item">
+        <div class="fin-ico"><i class="fas fa-users-gear"></i></div>
+        <div class="fin-big">Администратор — МИУДОЛ</div>
+        <div class="fin-lbl">Заказчики: УОПБ, УРЗ · Исполнители: АО «ГНИВЦ», НОЦ МГТУ им. Баумана; партнёры — МТС, «Корус»</div>
+      </div>
+      <div class="fin-item">
+        <div class="fin-ico"><i class="fas fa-file-contract"></i></div>
+        <div class="fin-big">558 млн ₽ · до 01.10.2026</div>
+        <div class="fin-lbl">Государственный контракт от 03.07.2026 № ГК 5-6-0/05</div>
+      </div>
+      <div class="fin-item">
+        <div class="fin-ico"><i class="fas fa-server"></i></div>
+        <div class="fin-big">АДП 4+6×H100 · КОЭ 8×H100</div>
+        <div class="fin-lbl">АДП (разработка, с 16.02.2026) · КОЭ (эксплуатация, с 11.05.2026)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. ТРИ ВСТРЕЧИ 2025 + ФАКТ H1 2026 -->
+<section class="slide" id="slide-status" data-title="Статус: план и факт">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;left:-100px;opacity:0.28;"></div>
+  <div class="slide-inner" style="max-width:1240px;">
+    <span class="chapter reveal"><span class="num">01</span> Статус выполнения — план и факт</span>
+    <h2 class="slide-title reveal d1">Что обещали <span class="gradient-text">и что выполнили</span></h2>
+    <p class="lead reveal d2">Мы придерживались плана: три встречи 2025 года задали вектор, а в первом полугодии 2026 года мы подтвердили его на защищённом контуре ФНС — реальным кодом и реальными данными.</p>
+
+    <div class="status-cols reveal d2">
+      <div class="status-col">
+        <div class="sc-head">Лента встреч · 2025</div>
+        <div class="ms-vert">
+          <div class="ms-vcard">
+            <div class="ms-vtop"><span class="ms-vstage">КОНЦЕПЦИЯ</span><span class="ms-vdate">29.10.2025</span></div>
+            <div class="ms-vmeta">Вызов · Видение · Архитектура</div>
+            <div class="ms-vres">От реакции — к предиктивному управлению</div>
+          </div>
+          <div class="ms-vcard">
+            <div class="ms-vtop"><span class="ms-vstage">ПЛАН</span><span class="ms-vdate">01.12.2025</span></div>
+            <div class="ms-vmeta">Паспорт · Команда · Бюджет</div>
+            <div class="ms-vres">От идеи — к обеспеченному плану действий</div>
+          </div>
+          <div class="ms-vcard">
+            <div class="ms-vtop"><span class="ms-vstage">MVP</span><span class="ms-vdate">25.12.2025</span></div>
+            <div class="ms-vmeta">Сквозной сценарий «Перевод бизнеса»</div>
+            <div class="ms-vres">Работающий прототип: от данных — к проекту иска</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-col">
+        <div class="sc-head">План на первое полугодие 2026</div>
+        <div class="sc-panel">
+          <div class="sc-bar">Цель</div>
+          <div class="sc-body"><p>Апробация сквозного сценария «Перевод бизнеса» на продуктивном контуре; ввод интеллектуального (ИИ) уровня в опытную эксплуатацию.</p></div>
+        </div>
+        <div class="sc-panel">
+          <div class="sc-bar">Результат</div>
+          <div class="sc-body">
+            <ul>
+              <li>Интеллектуальный (ИИ) уровень введён в опытную эксплуатацию</li>
+              <li>Риск невыхода решения в эксплуатацию устранён</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-col">
+        <div class="sc-head">Выполнено · факт H1 2026</div>
+        <div class="done-list">
+          <div class="done-item"><div class="done-num">1</div><div class="done-body"><h5>Обеспечение проекта</h5><ul><li>Заключён госконтракт (558 млн ₽, до 01.10.2026)</li><li>Развёрнуты контуры АДП и КОЭ, обеспечены видеокартами</li></ul></div></div>
+          <div class="done-item"><div class="done-num">2</div><div class="done-body"><h5>Развёртывание на контуре</h5><ul><li>Установлено ПО, настроено сетевое взаимодействие на КОЭ</li><li>Развёрнута версия 0.5 продукта и платформа на КОЭ</li></ul></div></div>
+          <div class="done-item"><div class="done-num">3</div><div class="done-body"><h5>Реализованная функциональность</h5><ul><li>Ядро деликтных сценариев финансового расследования, ЕФА, ЦОП, Цифровой помощник</li><li>Обеспечено работой на реальных данных</li></ul></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. ПРОБЛЕМЫ — ОБЗОР -->
+<section class="slide" id="slide-prob-map" data-title="Проблемы — обзор">
+  <div class="glow cyan" style="width:420px;height:420px;top:-120px;right:-100px;opacity:0.2;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02</span> Проблемы и решения</span>
+    <h2 class="slide-title reveal d1">На какие грабли <span class="gradient-text">мы наткнулись</span></h2>
+    <p class="lead reveal d2">Честная картина: проектов такого класса на рынке ещё не делали. Ниже — шесть узлов, которые тормозили работу. Дальше по каждому — что это значит и что мы делаем.</p>
+
+    <div class="grid grid-3 reveal d2">
+      <article class="card"><div class="icon"><i class="fas fa-diagram-project"></i></div><h3>1 · Архитектура</h3><p>16 разрозненных сценариев вместо единого продукта — дублирование и по 3–4 месяца на каждый.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-people-group"></i></div><h3>2 · Организация работы</h3><p>Длинный путь «от идеи до результата»: у ИИ 80% времени — это отладка, а не написание кода.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-microchip"></i></div><h3>3 · Модели</h3><p>Малые модели путаются и «галлюцинируют»; нужны сильные модели и оркестрация агентов.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-database"></i></div><h3>4 · Данные</h3><p>Данные «грязные» и неописанные; без метаданных агент не может на них опереться.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-server"></i></div><h3>5 · Инфраструктура и контуры</h3><p>Три контура и дефицит GPU; перенос между контурами каждый раз ломает ИИ-сценарии.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-handshake-angle"></i></div><h3>6 · Партнёры и экспертиза</h3><p>Партнёры хотят «поставить продукт», но не встраиваться в команду; готовой экспертизы на рынке нет.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 5. ПРОБЛЕМА 1 · АРХИТЕКТУРА -->
+<section class="slide" id="slide-arch" data-title="Проблема · Архитектура">
+  <div class="glow cyan" style="width:400px;height:400px;top:-120px;right:-120px;opacity:0.25;"></div>
+  <div class="slide-inner" style="max-width:1240px;">
+    <span class="chapter reveal"><span class="num">02·1</span> Проблема · Архитектура</span>
+    <h2 class="slide-title reveal d1">От 16 разрозненных сценариев — <span class="gradient-text">к единому ядру</span></h2>
+    <p class="lead reveal d2">Планировали переиспользовать 16 наработок НОЦ им. Баумана, но каждый сценарий — отдельный, дублирует функции и требует 3–4 месяца. Основное время вложили в архитектуру и выделили единое ядро «Финансовый расследователь» (v1.06).</p>
+
+    <div class="evo-wrap reveal d2" style="margin-bottom:22px;">
+      <article class="evo-col evo-before">
+        <header class="evo-head"><span class="evo-badge before">Было · 16 сценариев</span><h3>Россыпь разрозненных наработок НОЦ</h3></header>
+        <div class="evo-diagram"><div class="evo-tier"><div class="evo-nodes">
+          <span class="evo-node sm">Сквозные деликтные</span><span class="evo-node sm">Аналитические сервисы</span>
+          <span class="evo-node sm">Операционные</span><span class="evo-node sm">Выявление аномалий</span>
+        </div></div></div>
+        <p class="evo-note"><i class="fas fa-triangle-exclamation"></i> 3–4 месяца на один сценарий · дублирование функций и данных · разные пользователи и интерфейсы · нет сквозного результата</p>
+      </article>
+      <div class="evo-arrow"><i class="fas fa-arrow-right-long"></i><span>консолидация</span></div>
+      <article class="evo-col evo-after">
+        <header class="evo-head"><span class="evo-badge after">Стало · v1.06</span><h3>Единое ядро «Финансовый расследователь»</h3></header>
+        <div class="evo-diagram"><div class="evo-tier core agent">
+          <span class="evo-tier-lbl light">Один переиспользуемый конвейер</span>
+          <div class="evo-chips"><span class="chip on">ИИ-агенты</span><span class="chip on">Оркестрация</span><span class="chip on">MCP · инструменты</span>
+          <span class="chip wide on">ИНН → связанные лица → деликты → доказательства → взыскание → документы</span></div>
+        </div></div>
+        <p class="evo-note on"><i class="fas fa-shield-halved"></i> Отработано на сложнейшем деликте «Перевод бизнеса». Разворачивается в защищённом контуре КОЭ ФНС; зафиксировано в ПП «Реестр систем» на стадии ТЗ.</p>
+      </article>
+    </div>
+
+    <div class="arch-stack reveal d3">
+      <div class="arch-layer"><span class="lyr-ico"><i class="fas fa-user-tie"></i></span><div class="lyr-body"><h4>Пользователи и сценарии</h4><p>Аналитики, инспекторы, методологи. Сценарии показа — ЕФА, Перевод бизнеса, ЦОП, Цифровой помощник</p></div></div>
+      <div class="arch-layer agent-core"><span class="lyr-ico"><i class="fas fa-robot"></i></span><div class="lyr-body"><h4>Платформа ИИ-агентов (ядро)</h4><p>Оркестрация агентов, рассуждение и планирование, формирование АЗ/ПЗ, вызов инструментов через MCP</p></div></div>
+      <div class="arch-layer"><span class="lyr-ico"><i class="fas fa-cubes"></i></span><div class="lyr-body"><h4>Инструменты, подсистемы и данные</h4><p>ML/LLM-модели, low-code, BI, MCP-серверы к 46 витринам данных, пул GPU — по запросу агента</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. ПРОБЛЕМА 2 · ОРГАНИЗАЦИЯ РАБОТЫ -->
+<section class="slide" id="slide-work" data-title="Проблема · Организация работы">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;left:-100px;opacity:0.3;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·2</span> Проблема · Организация работы</span>
+    <h2 class="slide-title reveal d1">Длинный путь «от идеи <span class="gradient-text">до результата»</span></h2>
+    <p class="lead reveal d2">Классическая разработка (постановка → заявки → раскатка) для ИИ слишком долгая, а срок критичен. Ключевое отличие ИИ: основное время уходит не на код, а на отладку и проверку гипотез.</p>
+
+    <div class="harness-hero reveal d2" style="margin-bottom:22px;">
+      <div class="hh-side hh-bad"><div class="hh-ico"><i class="fas fa-code"></i></div><h4>Классическая разработка</h4><p><b style="color:#fff;">80%</b> — написание кода&nbsp;·&nbsp;<b style="color:#fff;">20%</b> — тестирование</p></div>
+      <div class="hh-eq"><i class="fas fa-arrow-right-arrow-left"></i></div>
+      <div class="hh-side hh-good"><div class="hh-ico"><i class="fas fa-vials"></i></div><h4>Разработка ИИ</h4><p><b style="color:#fff;">20%</b> — разработка&nbsp;·&nbsp;<b style="color:#fff;">80%</b> — отладка и проверка</p></div>
+    </div>
+    <p class="case-note reveal d3" style="margin-bottom:22px;">Соотношение перевёрнуто: мало собрать агента — его нужно долго доводить на реальных данных. Отсюда — совместные команды и короткие итерации вместо длинных цепочек передачи задач.</p>
+
+    <div class="ba-wrap reveal d4">
+      <div class="ba-col ba-before"><span class="ba-label">Роль методолога раньше</span><ul>
+        <li>Формулирует требования на бумаге</li><li>Передаёт задачи разработчикам и ждёт</li><li>Проверяет результат только в конце</li></ul></div>
+      <div class="ba-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="ba-col ba-after"><span class="ba-label">Роль методолога сейчас</span><ul>
+        <li>Полноправный участник продуктовой команды (ГНИВЦ, МТС, Корус, НОЦ МГТУ)</li><li>Сам проверяет гипотезы на платформе</li><li>Настраивает и валидирует логику агентов — опора на Центр компетенций</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ПРОБЛЕМА 3 · МОДЕЛИ -->
+<section class="slide" id="slide-models" data-title="Проблема · Модели">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;right:-100px;opacity:0.3;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·3</span> Проблема · Ограничения моделей</span>
+    <h2 class="slide-title reveal d1">Малые модели <span style="color:var(--gold);">плохо отрабатывают</span></h2>
+    <p class="lead reveal d2">На малом сервере несколько LLM работают «в тесноте». Одна и та же база знаний на разных моделях даёт разный результат: малая модель путается (например, принимает «ЦК» за «центральный комитет» вместо «центра компетенции») и теряет детали.</p>
+
+    <div class="ba-wrap reveal d2" style="margin-bottom:20px;">
+      <div class="ba-col ba-before"><span class="ba-label">Малая модель (мало ресурсов)</span><ul>
+        <li>Путается в контексте вопроса</li><li>Отвечает некорректно и непоследовательно</li><li>Теряет детали налогоплательщика</li><li>Короткий контекст → не тянет сложные кейсы</li></ul></div>
+      <div class="ba-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="ba-col ba-after"><span class="ba-label">Сильная модель (нужная мощность)</span><ul>
+        <li>Точно понимает суть запроса</li><li>Даёт корректные, связные ответы</li><li>Справляется со сложными кейсами</li><li>Длинный контекст, устойчивое качество</li></ul></div>
+    </div>
+    <p class="case-note reveal d3" style="margin-bottom:22px;">Кейс «Цифрового помощника»: один сценарий — разный результат. Разница только в мощности модели, которую позволяет инфраструктура. На платформе МТС уже доступны малая, средняя и большая модели для сравнения.</p>
+
+    <div class="grid grid-3">
+      <article class="card reveal d3"><h4>Что нужно по моделям</h4><p>Сильные модели с длинным контекстом: DeepSeek-V3/R1 671B, Qwen3-235B, Llama 3.1 405B. Мощность модели ограничена мощностью карт.</p></article>
+      <article class="card reveal d4"><h4>Как снимаем недетерминизм</h4><p>Оркестратор + ансамбль специализированных агентов, структурированный вывод, ссылки на источники, проверка человеком (HITL).</p></article>
+      <article class="card reveal d5"><h4>Зависимость от инфраструктуры</h4><p>Слабые карты → слабые модели → просадка качества. Поэтому парк GPU напрямую определяет применимость сценариев.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 8. ПРОБЛЕМА 4 · ДАННЫЕ -->
+<section class="slide" id="slide-data" data-title="Проблема · Данные">
+  <div class="glow cyan" style="width:400px;height:400px;top:-120px;left:-100px;opacity:0.22;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·4</span> Проблема · Данные</span>
+    <h2 class="slide-title reveal d1">Данные — <span class="gradient-text">фундамент, который нужно готовить</span></h2>
+    <p class="lead reveal d2">Качество ответа агента не выше качества данных под ним. Данные разрознены, «грязные» и неописанные — без метаданных ИИ-агент не может на них корректно опереться. Поэтому подготовка и описание данных — отдельный крупный трек 2026 года.</p>
+
+    <div class="grid grid-3">
+      <article class="card reveal d2"><div class="icon"><i class="fas fa-broom"></i></div><h3>Что мешает</h3><p>Данные разрознены и «грязные»; нет единого описания. Агент не понимает, что где лежит, и ошибается на некорректных значениях.</p></article>
+      <article class="card reveal d3"><div class="icon"><i class="fas fa-tags"></i></div><h3>Что делаем</h3><p>Описываем витрины по единому шаблону метаданных; загрузили 234 витрины (цель ~300); приоритизируем набор под сценарии.</p></article>
+      <article class="card reveal d4"><div class="icon"><i class="fas fa-globe"></i></div><h3>Внешние данные</h3><p>Получение данных из интернета — технически сложнее; целимся выйти на это к концу года. Часть источников подключается через MCP к 46 витринам.</p></article>
+    </div>
+
+    <div class="callout reveal d4" style="margin-top:24px;">
+      <div class="c-ico"><i class="fas fa-circle-info"></i></div>
+      <div><h4>Почему это критично именно для ИИ</h4><p>В классической разработке изменение таблицы данных — рядовая правка. Для ИИ-конвейера изменение структуры данных ломает работу агентов — поэтому дисциплина метаданных обязательна.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. ПРОБЛЕМА 5 · ИНФРАСТРУКТУРА И КОНТУРЫ -->
+<section class="slide" id="slide-infra" data-title="Проблема · Инфраструктура">
+  <div class="glow cyan" style="width:400px;height:400px;top:-120px;left:-100px;opacity:0.22;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·5</span> Проблема · Инфраструктура и контуры</span>
+    <h2 class="slide-title reveal d1">Три контура, дефицит GPU <span class="gradient-text">и узкое место процесса</span></h2>
+    <p class="lead reveal d2">Работа идёт в трёх контурах (разработка АДП → опытная эксплуатация КОЭ → промышленный), а при переносе между ними ИИ-сценарии каждый раз приходится донастраивать. Доступ в контур — только у ФКУ, изменения идут через заявки.</p>
+
+    <div class="split">
+      <div class="reveal d2">
+        <div class="stand-grid" style="grid-template-columns:1fr;">
+          <div class="stand-card"><div class="stand-head"><span class="st-ico"><i class="fas fa-layer-group"></i></span><div><h4>Три контура</h4><span class="st-sub">АДП (разработка) → КОЭ (опытная эксплуатация) → ПРОМ</span></div></div>
+            <ul><li>Каждый перенос между контурами ломает ИИ-сценарии — донастройка занимает недели</li><li>Для ИИ изменение даже одной таблицы критично, в отличие от классического кода</li></ul></div>
+          <div class="stand-card stand-prod"><div class="stand-head"><span class="st-ico"><i class="fas fa-clipboard-list"></i></span><div><h4>Доступ через ФКУ</h4><span class="st-sub">Единственная организация с доступом в контур</span></div></div>
+            <ul><li>Изменения идут через заявки — привычные процессы установки не подходят</li><li>Решение: плотная очная работа с ФКУ, единая сводка релизов и версий на КОЭ</li></ul></div>
+        </div>
+      </div>
+      <div class="reveal d3">
+        <div class="stat-row" style="grid-template-columns:1fr;gap:16px;">
+          <div class="stat" style="text-align:left;"><div class="big" style="color:var(--gold);">20×H200<span style="font-size:1.2rem;"> + 8×RTX</span></div><div class="lbl">текущий парк GPU под сценарии — недостаточно</div></div>
+          <div class="stat" style="text-align:left;"><div class="big" style="color:var(--gold);">+88×H200</div><div class="lbl">дополнительно требуется → целевой парк 108 ускорителей</div></div>
+          <div class="stat" style="text-align:left;"><div class="big" style="color:var(--gold);">до 100</div><div class="lbl">заявок в месяц на отладку компонентов в контуре</div></div>
+        </div>
+        <p class="case-note" style="margin-top:16px;">Заявка на дооснащение (ТЭО) — на рассмотрении в Минцифры; докупка GPU нужна для полноценной работы всех сценариев (по итогам тестов — ещё ~90 карт).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. ПРОБЛЕМА 6 · ПАРТНЁРЫ И ЭКСПЕРТИЗА -->
+<section class="slide" id="slide-partners" data-title="Проблема · Партнёры">
+  <div class="glow blue" style="width:420px;height:420px;top:-100px;left:-80px;opacity:0.3;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·6</span> Проблема · Партнёры и экспертиза</span>
+    <h2 class="slide-title reveal d1">Апробируем платформы — <span class="gradient-text">но экспертизы на рынке нет</span></h2>
+    <p class="lead reveal d2">Чтобы выбрать фундамент, апробируем ведущие российские ИИ-платформы. Но есть и обратная сторона: партнёры хотят, чтобы использовали их продукт, и не все готовы встраиваться в команду и делать вместе с нами. Готовых аналогичных решений на рынке нет.</p>
+
+    <div class="partner-grid reveal d2">
+      <article class="partner"><div class="p-logo" style="background:linear-gradient(135deg,#e30611,#ff5a5f);">M</div><h4>MWS AI (МТС)</h4><p>Развёрнута на КОЭ; платформа агентов и пайплайнов</p></article>
+      <article class="partner"><div class="p-logo" style="background:linear-gradient(135deg,#7a3cff,#2f7ef0);">A</div><h4>Астра ИИ</h4><p>В тестировании; кандидат на низкокодовую платформу</p></article>
+      <article class="partner"><div class="p-logo" style="background:linear-gradient(135deg,#0077ff,#37d6ff);">VK</div><h4>VK ИИ</h4><p>Оценка моделей и сервисов для сценариев ФНС</p></article>
+      <article class="partner"><div class="p-logo" style="background:linear-gradient(135deg,#21a038,#7fe6ff);">С</div><h4>Сбер</h4><p>GigaChat и семейство моделей — сравнительная апробация</p></article>
+      <article class="partner"><div class="p-logo" style="background:linear-gradient(135deg,#ffcc00,#ff3333);">Я</div><h4>Яндекс</h4><p>YandexGPT и инструменты — оценка применимости</p></article>
+    </div>
+
+    <div class="callout reveal d3" style="margin-top:26px;">
+      <div class="c-ico"><i class="fas fa-scale-balanced"></i></div>
+      <div><h4>Наш ответ: мультивендорный подход</h4><p>Не привязываемся к одной платформе, а сравниваем решения по качеству моделей, производительности и совместимости с закрытым контуром ФНС. Экспертизу такого класса проекта формируем сами — на рынке готовой нет.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. ПОКАЗ — АНОНС + 4 ФУНКЦИИ -->
+<section class="slide" id="slide-demo" data-title="Показ продукта">
+  <div class="glow cyan" style="width:420px;height:420px;top:-120px;right:-100px;opacity:0.22;"></div>
+  <div class="slide-inner" style="max-width:1240px;">
+    <span class="chapter reveal"><span class="num">03</span> Показ программного продукта</span>
+    <h2 class="slide-title reveal d1">Что покажем <span class="gradient-text">сегодня — на контуре</span></h2>
+    <p class="lead reveal d2">Демонстрируем не макет, а работающий продукт на реальных данных: сначала платформу, затем сервис. Четыре функции единого решения.</p>
+
+    <div class="func-grid reveal d2">
+      <article class="func-card"><span class="func-num">1</span><div class="func-hd">Перевод бизнеса</div><div class="func-body"><p class="fn-lead">Сквозной сценарий: от данных к проекту иска.</p><p class="fn-full"><b>Полнота:</b> 46 витрин, оценка перспектив дела и платёжеспособности</p></div></article>
+      <article class="func-card"><span class="func-num">2</span><div class="func-hd">ЕФА</div><div class="func-body"><p class="fn-lead">Оценка платёжеспособности налогоплательщика.</p><p class="fn-full"><b>Полнота:</b> полный комплект 40 листов, аналитическая справка</p></div></article>
+      <article class="func-card"><span class="func-num">3</span><div class="func-hd">Центр оперативной помощи</div><div class="func-body"><p class="fn-lead">Подготовка ответа на обращение НП с применением ИИ.</p><p class="fn-full"><b>Полнота:</b> черновик с данными АИС «Налог-3», распределение задач</p></div></article>
+      <article class="func-card"><span class="func-num">4</span><div class="func-hd">Цифровой помощник</div><div class="func-body"><p class="fn-lead">Вопрос инспектора → обоснованный ответ.</p><p class="fn-full"><b>Полнота:</b> база знаний по управлению долгом</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- 12. ОГРАНИЧЕНИЯ КОНТУРА -->
+<section class="slide" id="slide-limits" data-title="Ограничения контура">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;left:-100px;opacity:0.28;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">03·1</span> Ограничения контура · на 01.07.2026</span>
+    <h2 class="slide-title reveal d1">Честно — <span class="gradient-text">что работает, а что пока нет</span></h2>
+    <p class="lead reveal d2">Показ идёт на защищённом контуре с реальными данными. Отдельно фиксируем текущие ограничения — чтобы отделить работающее от планового.</p>
+
+    <div class="grid grid-2" style="margin-bottom:20px;">
+      <article class="card reveal d2"><h3><i class="fas fa-database" style="color:var(--cyan);margin-right:8px;"></i>Данные и масштаб</h3>
+        <p style="margin-top:8px;">На контуре загружено <b style="color:#fff;">234 витрины</b> данных (верхнеуровневый набор). Масштаб — вся страна, без ограничения по кругу налогоплательщиков (не пилотные 60 тыс.).</p></article>
+      <article class="card reveal d3"><h3><i class="fas fa-code-branch" style="color:var(--cyan);margin-right:8px;"></i>Версии</h3>
+        <p style="margin-top:8px;">На КОЭ развёрнута версия <b style="color:#fff;">0.5</b>; в показе — версия <b style="color:#fff;">1.0</b> с доработанным интерфейсом. Промышленный код заносится на контур поэтапно.</p></article>
+    </div>
+    <div class="grid grid-2">
+      <article class="card reveal d3"><h3><i class="fas fa-robot" style="color:var(--cyan);margin-right:8px;"></i>Цифровой помощник</h3>
+        <p style="margin-top:8px;">Отвечает пока только в части урегулирования долга: база знаний загружена по долгу; неактуальные НПА помечены. Расширение базы — в работе.</p></article>
+      <article class="card reveal d4"><h3><i class="fas fa-globe" style="color:var(--cyan);margin-right:8px;"></i>Внешние источники</h3>
+        <p style="margin-top:8px;">Получение данных из интернета к 01.10.2026 не успеваем — целевой срок конец года. Это влияет на полноту отдельных проверок.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 13. НИЗКОКОДОВАЯ ПЛАТФОРМА -->
+<section class="slide" id="slide-lowcode" data-title="Low-code платформа">
+  <div class="glow cyan" style="width:400px;height:400px;top:-120px;right:-120px;opacity:0.2;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">03·2</span> Низкокодовая (low-code) платформа</span>
+    <h2 class="slide-title reveal d1">Не самоцель, <span class="gradient-text">а ускоритель</span></h2>
+    <p class="lead reveal d2">Единый контур сборки ИИ-агентов ускоряет вывод сценариев и даёт методологам собирать гипотезы без длинного цикла заказной разработки.</p>
+
+    <div class="lc-wrap reveal d2">
+      <div class="lc-benefits">
+        <div class="lc-benefit"><span class="lc-ico"><i class="fas fa-bolt"></i></span><div><h5>Скорость</h5><p>Сборка и изменение ИИ-сценариев без длинного цикла заказной разработки — короче time-to-market.</p></div></div>
+        <div class="lc-benefit"><span class="lc-ico"><i class="fas fa-copy"></i></span><div><h5>Тиражирование</h5><p>Готовые агенты и шаблоны переиспользуются между сценариями.</p></div></div>
+        <div class="lc-benefit"><span class="lc-ico"><i class="fas fa-coins"></i></span><div><h5>Стоимость владения</h5><p>С внедрением low-code планируем удержать сопровождение на уровне 20% CAPEX.</p></div></div>
+        <div class="lc-benefit"><span class="lc-ico"><i class="fas fa-sliders"></i></span><div><h5>Управляемость</h5><p>Единый контур управления моделями и агентами вместо набора разрозненных решений.</p></div></div>
+      </div>
+      <div class="lc-plats">
+        <div class="lc-plat"><div class="lc-ptop"><h4>Платформа МТС</h4><span class="lc-badge ready">готово · КОЭ</span></div><p>Проверена и занесена на контур опытной эксплуатации. Собственная языковая модель и среда управления ИИ-агентами.</p></div>
+        <div class="lc-plat"><div class="lc-ptop"><h4>Платформа Астра</h4><span class="lc-badge testing">в тестировании</span></div><p>Выбор ещё не зафиксирован. Идёт тестирование; решение — по итогам, с учётом ИБ, стоимости и производительности.</p></div>
+        <div class="lc-pos"><h4>Позиция по выбору</h4><p>Мультивендорный подход: платформа фиксируется по результатам апробации, без привязки к одному поставщику.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14. ПЛАН 2026 -->
+<section class="slide" id="slide-plan26" data-title="План 2026">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;right:-100px;opacity:0.28;"></div>
+  <div class="slide-inner" style="max-width:1240px;">
+    <span class="chapter reveal"><span class="num">04</span> План 2026</span>
+    <h2 class="slide-title reveal d1">Что делаем в 2026: <span class="gradient-text">функционал и сценарии</span></h2>
+    <p class="lead reveal d2">Единая ИИ-платформа: от сбора доказательств по данным ФНС — до готовых документов для суда.</p>
+
+    <div class="plan-split reveal d2">
+      <div class="plan-panel">
+        <div class="plan-panel-title"><i class="fas fa-list-check"></i> Ключевой функционал</div>
+        <ul class="plan-func-list">
+          <li><strong>Финансовый расследователь</strong>: сбор доказательств по 46 витринам данных по ИНН</li>
+          <li><strong>Проекты процессуальных документов</strong>: иски, ходатайства об обеспечительных мерах, жалобы, заявления</li>
+          <li>Оценка перспектив дела и доказательств с учётом судебной практики (<strong>TaxFacto</strong>)</li>
+          <li>Экономическая оценка ответчиков и платёжеспособности — <strong>ЕФА</strong></li>
+          <li><strong>АРМ инспектора</strong> и единое окно по делу; автоназначение задач</li>
+          <li>Промышленная обработка обращений граждан (<strong>ЦОП</strong>) и помощник с базой знаний</li>
+        </ul>
+        <div class="plan-kpi"><i class="fas fa-bullseye"></i> КПЭ 2026: документы для суда — до 80% · обращения граждан — до 80% (силами ИИ)</div>
+      </div>
+      <div class="plan-panel">
+        <div class="plan-panel-title"><i class="fas fa-diagram-project"></i> Сценарии 2026 — 3 направления</div>
+        <div class="plan-group"><div class="plan-group-hd">Взыскание и деликты · 6 сквозных сценариев</div><div class="plan-tags">
+          <span>Перевод бизнеса</span><span>Гражданско-правовые деликты</span><span>Сомнительные сделки</span><span>Сокрытие активов</span><span>Криминальное банкротство</span><span>Аномалии арбитражных управляющих</span></div></div>
+        <div class="plan-group"><div class="plan-group-hd g2">Анализ и сервисы</div><div class="plan-tags">
+          <span>ЕФА</span><span>Веб-сервис ЕФА</span><span>TaxFacto</span><span>Оценка дебиторской задолженности</span><span>Умное взыскание</span></div></div>
+        <div class="plan-group"><div class="plan-group-hd g3">Аналитика и помощь</div><div class="plan-tags">
+          <span>Центр оперативной помощи</span><span>Цифровой помощник</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15. ПЛАН 2027 -->
+<section class="slide" id="slide-plan27" data-title="План 2027">
+  <div class="glow cyan" style="width:420px;height:420px;top:-120px;left:-90px;opacity:0.2;"></div>
+  <div class="slide-inner" style="max-width:1240px;">
+    <span class="chapter reveal"><span class="num">05</span> План 2027</span>
+    <h2 class="slide-title reveal d1">Новый функционал ИИ <span class="gradient-text">на 2027</span></h2>
+    <p class="lead reveal d2">Развитие платформы — восемь направлений нового функционала (по итоговым требованиям и заявке на 2027).</p>
+
+    <div class="plan-cards reveal d2">
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">1</span>Гибкие дашборды по запросу</div><div class="plan-card-body"><ul><li>Визуализации на естественном языке; правка в диалоге</li><li>ИИ-подсветка резервов и аномалий</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">2</span>Единая проектная группа (ЕПГ)</div><div class="plan-card-body"><ul><li>Ранняя фиксация рисков и активов; бенефициары и КДЛ</li><li>Упреждающие обеспечительные меры (ст. 101 НК)</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">3</span>Меры поддержки (отсрочки, рассрочки)</div><div class="plan-card-body"><ul><li>Мониторинг графиков погашения; отклонения</li><li>ИИ-прогноз срыва; автоматизация решений</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">4</span>Анализ отчётов об оценке</div><div class="plan-card-body"><ul><li>Извлечение из PDF/скана; сверка с кадастром</li><li>Выявление резервов стоимости для взыскания</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">5</span>Взыскание по деликтам</div><div class="plan-card-body"><ul><li>Начисления в ОКНО из карточки ПЗ; ОМ в Реестре ФНС</li><li>Связка с судом, ФССП; ИИ-алерты по срокам</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">6</span>Инициирование банкротства</div><div class="plan-card-body"><ul><li>Автовыявление должников с признаками</li><li>Оценка вероятности погашения; резервы</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">7</span>Контроль нарушений банков</div><div class="plan-card-body"><ul><li>Контроль сроков и полноты документов в банки</li><li>Анализ правомерности отказов; отбор на проверку</li></ul></div></article>
+      <article class="plan-card"><div class="plan-card-hd"><span class="pc-num">8</span>Списание задолженности</div><div class="plan-card-body"><ul><li>Автоотбор кандидатов по ст. 59 НК с обоснованием</li><li>Проверка исчерпания резервов взыскания</li></ul></div></article>
+    </div>
+
+    <div class="callout reveal d3" style="margin-top:22px;">
+      <div class="c-ico"><i class="fas fa-microchip"></i></div>
+      <div><h4>Обеспечение мощностями под план 2027</h4><p>Подготовлено ТЭО на закупку 88×H200 — для полноценной работы всех сценариев (целевой парк 108 ускорителей). Заявка на рассмотрении в Минцифры.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16. ИТОГ -->
+<section class="slide" id="slide-final" data-title="Итог">
+  <div class="glow cyan" style="width:460px;height:460px;top:40%;left:50%;transform:translate(-50%,-50%);opacity:0.18;"></div>
+  <div class="slide-inner" style="text-align:center;max-width:900px;margin:auto;">
+    <span class="chapter reveal" style="margin-left:auto;margin-right:auto;"><span class="num">✓</span> Итог</span>
+    <h2 class="slide-title reveal d1" style="font-size:clamp(1.9rem,4vw,3.2rem);">От разрозненных идей — <span class="gradient-text">к живому ИИ-продукту в контуре ФНС</span></h2>
+    <p class="lead reveal d2" style="margin-left:auto;margin-right:auto;">Единое ядро «Финансовый расследователь» развёрнуто на защищённом контуре и работает на реальных данных. Проблемы честно обозначены и обеспечены решениями. Впереди — сдача по госконтракту к 01.10.2026 и промышленная эксплуатация с 01.04.2027.</p>
+    <div class="hero-badges reveal d3" style="justify-content:center;">
+      <span class="hero-badge"><i class="fas fa-shield-halved"></i>&nbsp; Контур КОЭ · реальные данные</span>
+      <span class="hero-badge"><i class="fas fa-microchip"></i>&nbsp; Ансамбль ИИ-агентов</span>
+      <span class="hero-badge"><i class="fas fa-scale-balanced"></i>&nbsp; Мультивендорность</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
