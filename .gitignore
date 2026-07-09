@@ -1,7 +1,7 @@
 .claude/
 data_block.txt
 data_literal*.js
-tasks.json
+tasks*.json
 node_modules/
 package.json
 package-lock.json
