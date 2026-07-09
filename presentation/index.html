@@ -161,10 +161,10 @@
 
     <div class="grid grid-3 reveal d2">
       <article class="card"><div class="icon"><i class="fas fa-diagram-project"></i></div><h3>1 · Архитектура</h3><p>16 разрозненных сценариев вместо единого продукта — дублирование и по 3–4 месяца на каждый.</p></article>
-      <article class="card"><div class="icon"><i class="fas fa-people-group"></i></div><h3>2 · Организация работы</h3><p>Длинный путь «от идеи до результата»: у ИИ 80% времени — это отладка, а не написание кода.</p></article>
-      <article class="card"><div class="icon"><i class="fas fa-microchip"></i></div><h3>3 · Модели</h3><p>Малые модели путаются и «галлюцинируют»; нужны сильные модели и оркестрация агентов.</p></article>
-      <article class="card"><div class="icon"><i class="fas fa-database"></i></div><h3>4 · Данные</h3><p>Данные «грязные» и неописанные; без метаданных агент не может на них опереться.</p></article>
-      <article class="card"><div class="icon"><i class="fas fa-server"></i></div><h3>5 · Инфраструктура и контуры</h3><p>Три контура и дефицит GPU; перенос между контурами каждый раз ломает ИИ-сценарии.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-server"></i></div><h3>2 · Контур и инфраструктура</h3><p>Три контура и дефицит GPU; перенос между контурами каждый раз ломает ИИ-сценарии.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-people-group"></i></div><h3>3 · Организация работы</h3><p>Длинный путь «от идеи до результата»: у ИИ 80% времени — это отладка, а не написание кода.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-microchip"></i></div><h3>4 · Модели</h3><p>Малые модели путаются и «галлюцинируют»; нужны сильные модели и оркестрация агентов.</p></article>
+      <article class="card"><div class="icon"><i class="fas fa-database"></i></div><h3>5 · Данные</h3><p>Данные «грязные» и неописанные; без метаданных агент не может на них опереться.</p></article>
       <article class="card"><div class="icon"><i class="fas fa-handshake-angle"></i></div><h3>6 · Партнёры и экспертиза</h3><p>Партнёры хотят «поставить продукт», но не встраиваться в команду; готовой экспертизы на рынке нет.</p></article>
     </div>
   </div>
@@ -207,82 +207,11 @@
   </div>
 </section>
 
-<!-- 6. ПРОБЛЕМА 2 · ОРГАНИЗАЦИЯ РАБОТЫ -->
-<section class="slide" id="slide-work" data-title="Проблема · Организация работы">
-  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;left:-100px;opacity:0.3;"></div>
-  <div class="slide-inner" style="max-width:1200px;">
-    <span class="chapter reveal"><span class="num">02·2</span> Проблема · Организация работы</span>
-    <h2 class="slide-title reveal d1">Длинный путь «от идеи <span class="gradient-text">до результата»</span></h2>
-    <p class="lead reveal d2">Классическая разработка (постановка → заявки → раскатка) для ИИ слишком долгая, а срок критичен. Ключевое отличие ИИ: основное время уходит не на код, а на отладку и проверку гипотез.</p>
-
-    <div class="harness-hero reveal d2" style="margin-bottom:22px;">
-      <div class="hh-side hh-bad"><div class="hh-ico"><i class="fas fa-code"></i></div><h4>Классическая разработка</h4><p><b style="color:#fff;">80%</b> — написание кода&nbsp;·&nbsp;<b style="color:#fff;">20%</b> — тестирование</p></div>
-      <div class="hh-eq"><i class="fas fa-arrow-right-arrow-left"></i></div>
-      <div class="hh-side hh-good"><div class="hh-ico"><i class="fas fa-vials"></i></div><h4>Разработка ИИ</h4><p><b style="color:#fff;">20%</b> — разработка&nbsp;·&nbsp;<b style="color:#fff;">80%</b> — отладка и проверка</p></div>
-    </div>
-    <p class="case-note reveal d3" style="margin-bottom:22px;">Соотношение перевёрнуто: мало собрать агента — его нужно долго доводить на реальных данных. Отсюда — совместные команды и короткие итерации вместо длинных цепочек передачи задач.</p>
-
-    <div class="ba-wrap reveal d4">
-      <div class="ba-col ba-before"><span class="ba-label">Роль методолога раньше</span><ul>
-        <li>Формулирует требования на бумаге</li><li>Передаёт задачи разработчикам и ждёт</li><li>Проверяет результат только в конце</li></ul></div>
-      <div class="ba-arrow"><i class="fas fa-arrow-right"></i></div>
-      <div class="ba-col ba-after"><span class="ba-label">Роль методолога сейчас</span><ul>
-        <li>Полноправный участник продуктовой команды (ГНИВЦ, МТС, Корус, НОЦ МГТУ)</li><li>Сам проверяет гипотезы на платформе</li><li>Настраивает и валидирует логику агентов — опора на Центр компетенций</li></ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. ПРОБЛЕМА 3 · МОДЕЛИ -->
-<section class="slide" id="slide-models" data-title="Проблема · Модели">
-  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;right:-100px;opacity:0.3;"></div>
-  <div class="slide-inner" style="max-width:1200px;">
-    <span class="chapter reveal"><span class="num">02·3</span> Проблема · Ограничения моделей</span>
-    <h2 class="slide-title reveal d1">Малые модели <span style="color:var(--gold);">плохо отрабатывают</span></h2>
-    <p class="lead reveal d2">На малом сервере несколько LLM работают «в тесноте». Одна и та же база знаний на разных моделях даёт разный результат: малая модель путается (например, принимает «ЦК» за «центральный комитет» вместо «центра компетенции») и теряет детали.</p>
-
-    <div class="ba-wrap reveal d2" style="margin-bottom:20px;">
-      <div class="ba-col ba-before"><span class="ba-label">Малая модель (мало ресурсов)</span><ul>
-        <li>Путается в контексте вопроса</li><li>Отвечает некорректно и непоследовательно</li><li>Теряет детали налогоплательщика</li><li>Короткий контекст → не тянет сложные кейсы</li></ul></div>
-      <div class="ba-arrow"><i class="fas fa-arrow-right"></i></div>
-      <div class="ba-col ba-after"><span class="ba-label">Сильная модель (нужная мощность)</span><ul>
-        <li>Точно понимает суть запроса</li><li>Даёт корректные, связные ответы</li><li>Справляется со сложными кейсами</li><li>Длинный контекст, устойчивое качество</li></ul></div>
-    </div>
-    <p class="case-note reveal d3" style="margin-bottom:22px;">Кейс «Цифрового помощника»: один сценарий — разный результат. Разница только в мощности модели, которую позволяет инфраструктура. На платформе МТС уже доступны малая, средняя и большая модели для сравнения.</p>
-
-    <div class="grid grid-3">
-      <article class="card reveal d3"><h4>Что нужно по моделям</h4><p>Сильные модели с длинным контекстом: DeepSeek-V3/R1 671B, Qwen3-235B, Llama 3.1 405B. Мощность модели ограничена мощностью карт.</p></article>
-      <article class="card reveal d4"><h4>Как снимаем недетерминизм</h4><p>Оркестратор + ансамбль специализированных агентов, структурированный вывод, ссылки на источники, проверка человеком (HITL).</p></article>
-      <article class="card reveal d5"><h4>Зависимость от инфраструктуры</h4><p>Слабые карты → слабые модели → просадка качества. Поэтому парк GPU напрямую определяет применимость сценариев.</p></article>
-    </div>
-  </div>
-</section>
-
-<!-- 8. ПРОБЛЕМА 4 · ДАННЫЕ -->
-<section class="slide" id="slide-data" data-title="Проблема · Данные">
-  <div class="glow cyan" style="width:400px;height:400px;top:-120px;left:-100px;opacity:0.22;"></div>
-  <div class="slide-inner" style="max-width:1200px;">
-    <span class="chapter reveal"><span class="num">02·4</span> Проблема · Данные</span>
-    <h2 class="slide-title reveal d1">Данные — <span class="gradient-text">фундамент, который нужно готовить</span></h2>
-    <p class="lead reveal d2">Качество ответа агента не выше качества данных под ним. Данные разрознены, «грязные» и неописанные — без метаданных ИИ-агент не может на них корректно опереться. Поэтому подготовка и описание данных — отдельный крупный трек 2026 года.</p>
-
-    <div class="grid grid-3">
-      <article class="card reveal d2"><div class="icon"><i class="fas fa-broom"></i></div><h3>Что мешает</h3><p>Данные разрознены и «грязные»; нет единого описания. Агент не понимает, что где лежит, и ошибается на некорректных значениях.</p></article>
-      <article class="card reveal d3"><div class="icon"><i class="fas fa-tags"></i></div><h3>Что делаем</h3><p>Описываем витрины по единому шаблону метаданных; загрузили 234 витрины (цель ~300); приоритизируем набор под сценарии.</p></article>
-      <article class="card reveal d4"><div class="icon"><i class="fas fa-globe"></i></div><h3>Внешние данные</h3><p>Получение данных из интернета — технически сложнее; целимся выйти на это к концу года. Часть источников подключается через MCP к 46 витринам.</p></article>
-    </div>
-
-    <div class="callout reveal d4" style="margin-top:24px;">
-      <div class="c-ico"><i class="fas fa-circle-info"></i></div>
-      <div><h4>Почему это критично именно для ИИ</h4><p>В классической разработке изменение таблицы данных — рядовая правка. Для ИИ-конвейера изменение структуры данных ломает работу агентов — поэтому дисциплина метаданных обязательна.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 9. ПРОБЛЕМА 5 · ИНФРАСТРУКТУРА И КОНТУРЫ -->
+<!-- 6. ПРОБЛЕМА 2 · КОНТУР И ИНФРАСТРУКТУРА -->
 <section class="slide" id="slide-infra" data-title="Проблема · Инфраструктура">
   <div class="glow cyan" style="width:400px;height:400px;top:-120px;left:-100px;opacity:0.22;"></div>
   <div class="slide-inner" style="max-width:1200px;">
-    <span class="chapter reveal"><span class="num">02·5</span> Проблема · Инфраструктура и контуры</span>
+    <span class="chapter reveal"><span class="num">02·2</span> Проблема · Контур и инфраструктура</span>
     <h2 class="slide-title reveal d1">Три контура, дефицит GPU <span class="gradient-text">и узкое место процесса</span></h2>
     <p class="lead reveal d2">Работа идёт в трёх контурах (разработка АДП → опытная эксплуатация КОЭ → промышленный), а при переносе между ними ИИ-сценарии каждый раз приходится донастраивать. Доступ в контур — только у ФКУ, изменения идут через заявки.</p>
 
@@ -307,13 +236,85 @@
   </div>
 </section>
 
+<!-- 6. ПРОБЛЕМА 2 · ОРГАНИЗАЦИЯ РАБОТЫ -->
+<section class="slide" id="slide-work" data-title="Проблема · Организация работы">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;left:-100px;opacity:0.3;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·3</span> Проблема · Организация работы</span>
+    <h2 class="slide-title reveal d1">Длинный путь «от идеи <span class="gradient-text">до результата»</span></h2>
+    <p class="lead reveal d2">Классическая разработка (постановка → заявки → раскатка) для ИИ слишком долгая, а срок критичен. Ключевое отличие ИИ: основное время уходит не на код, а на отладку и проверку гипотез.</p>
+
+    <div class="harness-hero reveal d2" style="margin-bottom:22px;">
+      <div class="hh-side hh-bad"><div class="hh-ico"><i class="fas fa-code"></i></div><h4>Классическая разработка</h4><p><b style="color:#fff;">80%</b> — написание кода&nbsp;·&nbsp;<b style="color:#fff;">20%</b> — тестирование</p></div>
+      <div class="hh-eq"><i class="fas fa-arrow-right-arrow-left"></i></div>
+      <div class="hh-side hh-good"><div class="hh-ico"><i class="fas fa-vials"></i></div><h4>Разработка ИИ</h4><p><b style="color:#fff;">20%</b> — разработка&nbsp;·&nbsp;<b style="color:#fff;">80%</b> — отладка и проверка</p></div>
+    </div>
+    <p class="case-note reveal d3" style="margin-bottom:22px;">Соотношение перевёрнуто: мало собрать агента — его нужно долго доводить на реальных данных. Отсюда — совместные команды и короткие итерации вместо длинных цепочек передачи задач. Соотношение 80/20 — экспертная оценка команды проекта по итогам практической отладки.</p>
+
+    <div class="ba-wrap reveal d4">
+      <div class="ba-col ba-before"><span class="ba-label">Роль методолога раньше</span><ul>
+        <li>Формулирует требования на бумаге</li><li>Передаёт задачи разработчикам и ждёт</li><li>Проверяет результат только в конце</li></ul></div>
+      <div class="ba-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="ba-col ba-after"><span class="ba-label">Роль методолога сейчас</span><ul>
+        <li>Полноправный участник продуктовой команды (ГНИВЦ, МТС, Корус, НОЦ МГТУ)</li><li>Сам проверяет гипотезы на платформе</li><li>Настраивает и валидирует логику агентов — опора на Центр компетенций</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ПРОБЛЕМА 3 · МОДЕЛИ -->
+<section class="slide" id="slide-models" data-title="Проблема · Модели">
+  <div class="glow blue" style="width:420px;height:420px;bottom:-140px;right:-100px;opacity:0.3;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·4</span> Проблема · Ограничения моделей</span>
+    <h2 class="slide-title reveal d1">Малые модели <span style="color:var(--gold);">плохо отрабатывают</span></h2>
+    <p class="lead reveal d2">На малом сервере несколько LLM работают «в тесноте». Одна и та же база знаний на разных моделях даёт разный результат: малая модель путается (например, принимает «ЦК» за «центральный комитет» вместо «центра компетенции») и теряет детали.</p>
+
+    <div class="ba-wrap reveal d2" style="margin-bottom:20px;">
+      <div class="ba-col ba-before"><span class="ba-label">Малая модель (мало ресурсов)</span><ul>
+        <li>Путается в контексте вопроса</li><li>Отвечает некорректно и непоследовательно</li><li>Теряет детали налогоплательщика</li><li>Короткий контекст → не тянет сложные кейсы</li></ul></div>
+      <div class="ba-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="ba-col ba-after"><span class="ba-label">Сильная модель (нужная мощность)</span><ul>
+        <li>Точно понимает суть запроса</li><li>Даёт корректные, связные ответы</li><li>Справляется со сложными кейсами</li><li>Длинный контекст, устойчивое качество</li></ul></div>
+    </div>
+    <p class="case-note reveal d3" style="margin-bottom:22px;">Кейс «Цифрового помощника»: один сценарий — разный результат. Разница только в мощности модели, которую позволяет инфраструктура. На платформе МТС уже доступны малая, средняя и большая модели для сравнения.</p>
+
+    <div class="grid grid-3">
+      <article class="card reveal d3"><h4>Что нужно по моделям</h4><p>Сильные модели с длинным контекстом: DeepSeek-V3/R1 671B, Qwen3-235B, Llama 3.1 405B. Мощность модели ограничена мощностью карт.</p></article>
+      <article class="card reveal d4"><h4>Как снимаем недетерминизм</h4><p>Оркестратор + ансамбль специализированных агентов, структурированный вывод, ссылки на источники, проверка человеком (HITL).</p></article>
+      <article class="card reveal d5"><h4>Зависимость от инфраструктуры</h4><p>Слабые карты → слабые модели → просадка качества. Поэтому парк GPU напрямую определяет применимость сценариев.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 8. ПРОБЛЕМА 4 · ДАННЫЕ -->
+<section class="slide" id="slide-data" data-title="Проблема · Данные">
+  <div class="glow cyan" style="width:400px;height:400px;top:-120px;left:-100px;opacity:0.22;"></div>
+  <div class="slide-inner" style="max-width:1200px;">
+    <span class="chapter reveal"><span class="num">02·5</span> Проблема · Данные</span>
+    <h2 class="slide-title reveal d1">Данные — <span class="gradient-text">фундамент, который нужно готовить</span></h2>
+    <p class="lead reveal d2">Качество ответа агента не выше качества данных под ним. Данные разрознены, «грязные» и неописанные — без метаданных ИИ-агент не может на них корректно опереться. Поэтому подготовка и описание данных — отдельный крупный трек 2026 года.</p>
+
+    <div class="grid grid-3">
+      <article class="card reveal d2"><div class="icon"><i class="fas fa-broom"></i></div><h3>Что мешает</h3><p>Данные разрознены и «грязные»; нет единого описания. Агент не понимает, что где лежит, и ошибается на некорректных значениях.</p></article>
+      <article class="card reveal d3"><div class="icon"><i class="fas fa-tags"></i></div><h3>Что делаем</h3><p>Описываем витрины по единому шаблону метаданных; загрузили 234 витрины (цель ~300); приоритизируем набор под сценарии.</p></article>
+      <article class="card reveal d4"><div class="icon"><i class="fas fa-globe"></i></div><h3>Внешние данные</h3><p>Получение данных из интернета — технически сложнее; целимся выйти на это к концу года. Часть источников подключается через MCP к 46 витринам.</p></article>
+    </div>
+
+    <div class="callout reveal d4" style="margin-top:24px;">
+      <div class="c-ico"><i class="fas fa-circle-info"></i></div>
+      <div><h4>Почему это критично именно для ИИ</h4><p>В классической разработке изменение таблицы данных — рядовая правка. Для ИИ-конвейера изменение структуры данных ломает работу агентов — поэтому дисциплина метаданных обязательна.</p></div>
+    </div>
+  </div>
+</section>
+
+
 <!-- 10. ПРОБЛЕМА 6 · ПАРТНЁРЫ И ЭКСПЕРТИЗА -->
 <section class="slide" id="slide-partners" data-title="Проблема · Партнёры">
   <div class="glow blue" style="width:420px;height:420px;top:-100px;left:-80px;opacity:0.3;"></div>
   <div class="slide-inner" style="max-width:1200px;">
     <span class="chapter reveal"><span class="num">02·6</span> Проблема · Партнёры и экспертиза</span>
     <h2 class="slide-title reveal d1">Апробируем платформы — <span class="gradient-text">но экспертизы на рынке нет</span></h2>
-    <p class="lead reveal d2">Чтобы выбрать фундамент, апробируем ведущие российские ИИ-платформы. Но есть и обратная сторона: партнёры хотят, чтобы использовали их продукт, и не все готовы встраиваться в команду и делать вместе с нами. Готовых аналогичных решений на рынке нет.</p>
+    <p class="lead reveal d2">Чтобы выбрать фундамент, апробируем ведущие российские ИИ-платформы. Но есть и обратная сторона: партнёры хотят, чтобы использовали их продукт, и не все готовы встраиваться в команду и делать вместе с нами. По результатам первичного анализа рынка релевантных готовых решений не выявлено.</p>
 
     <div class="partner-grid reveal d2">
       <article class="partner"><div class="p-logo" style="background:linear-gradient(135deg,#e30611,#ff5a5f);">M</div><h4>MWS AI (МТС)</h4><p>Развёрнута на КОЭ; платформа агентов и пайплайнов</p></article>
@@ -363,7 +364,7 @@
     </div>
     <div class="grid grid-2">
       <article class="card reveal d3"><h3><i class="fas fa-robot" style="color:var(--cyan);margin-right:8px;"></i>Цифровой помощник</h3>
-        <p style="margin-top:8px;">Отвечает пока только в части урегулирования долга: база знаний загружена по долгу; неактуальные НПА помечены. Расширение базы — в работе.</p></article>
+        <p style="margin-top:8px;">База знаний расширяется: приоритет — урегулирование долга; дополнительно загружены материалы по смежным направлениям. Неактуальные НПА помечены.</p></article>
       <article class="card reveal d4"><h3><i class="fas fa-globe" style="color:var(--cyan);margin-right:8px;"></i>Внешние источники</h3>
         <p style="margin-top:8px;">Получение данных из интернета к 01.10.2026 не успеваем — целевой срок конец года. Это влияет на полноту отдельных проверок.</p></article>
     </div>
