@@ -2,6 +2,8 @@
 data_block.txt
 data_literal*.js
 tasks*.json
+audit.json
+pdf_dates.json
 node_modules/
 package.json
 package-lock.json
@@ -9,5 +11,8 @@ shot.js
 t.js
 t2.js
 tc.js
+tf.js
+tz.js
 preview_*.png
 p2_*.png
+fix_*.png
