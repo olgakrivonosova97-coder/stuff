@@ -177,11 +177,12 @@
 ============================================================================= */
 
 /* ===== 1. DOMAIN — ПЛАН-ГРАФИК ЕГРЮЛ (ЦСР ФИАС / LLM / КОЭ и КПЭ) =========== */
-const ANALYSIS_DATE = new Date(2026, 6, 8);   // дата анализа 08.07.2026 (файл «8.07»)
+// Дата анализа хранится ТОЛЬКО в state.analysisDate (единый источник).
+const DEFAULT_ANALYSIS_DATE = '2026-07-08';   // снимок на дату версии файла (08.07.2026)
 
 const DOMAIN = {
   title:    'План-график ЕГРЮЛ · ЦСР ФИАС / LLM',
-  subtitle: 'Запуск ППО ЦСР ФИАС на КОЭ и КПЭ · дата анализа 08.07.2026',
+  subtitle: 'Запуск ППО ЦСР ФИАС на КОЭ и КПЭ',
   currency: '',                          // без денежной единицы
   bigUnit:  '',
 
@@ -379,6 +380,12 @@ function fmtDate(d){
   const p = n => String(n).padStart(2,'0');
   return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+String(d.getFullYear()).slice(2);
 }
+// полный формат ДД.ММ.ГГГГ (для подписи даты анализа — без двусмысленности локали)
+function fmtDateFull(d){
+  if(!d) return '—';
+  const p = n => String(n).padStart(2,'0');
+  return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear();
+}
 const midnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 function diffDays(a, b){ return Math.round((midnight(a)-midnight(b))/86400000); }  // a - b, календарные
 
@@ -394,7 +401,7 @@ const state = {
   qty:{},                                       // { leafId: newValue }
   expanded:{ }, expandedInit:false,
   dim: DOMAIN.breakdownDims[0],
-  analysisDate: todayISO(),                     // ISO; дата анализа (по умолчанию — сегодня браузера)
+  analysisDate: DEFAULT_ANALYSIS_DATE,          // ISO; дата анализа. Дефолт — снимок 08.07.2026 (не «сегодня»); кнопка «Сегодня» переключает на todayISO()
 };
 DOMAIN.facets.forEach(f=>state.filters[f.key]=new Set());
 
@@ -518,7 +525,7 @@ function render(){
   app.innerHTML = `
     <div class="header">
       <div>
-        <div class="kicker">${esc(DOMAIN.subtitle)}</div>
+        <div class="kicker">${esc(DOMAIN.subtitle)} · дата анализа ${esc(fmtDateFull(parseDate(state.analysisDate)))}</div>
         <h1>${esc(DOMAIN.title)}</h1>
       </div>
       <div style="display:flex;align-items:center;gap:18px;">
@@ -535,8 +542,9 @@ function render(){
           <div class="ttl">Дата анализа</div>
           <div style="display:flex;gap:6px;align-items:center">
             <input class="search" style="flex:1" type="date" value="${esc(state.analysisDate)}" data-act="analysis">
-            <button class="pill" data-act="today" title="Сегодня">Сегодня</button>
+            <button class="pill" data-act="today" title="Пересчитать на сегодня">Сегодня</button>
           </div>
+          <div class="muted" style="font-size:12px;margin-top:6px">Выбрана дата анализа: <b style="color:var(--ink)">${esc(fmtDateFull(parseDate(state.analysisDate)))}</b></div>
         </div>
         <input class="search" placeholder="Поиск…" value="${esc(state.search)}" data-act="search">
         ${DOMAIN.facets.map(facetHtml).join('')}
