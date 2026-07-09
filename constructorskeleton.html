@@ -222,7 +222,6 @@ const DOMAIN = {
     { key:'pctLabel',    label:'Выполнение' },
   ],
 
-  status: { on:'Показана', off:'Скрыта' },        // подписи пилюли показать/скрыть
 };
 
 // названия статусов (единый источник)
@@ -514,7 +513,7 @@ function render(){
   const V = view();
   const app = document.getElementById('app');
 
-  const gridCols = `minmax(220px,1fr) repeat(${DOMAIN.measures.length},minmax(72px,96px)) 118px`;
+  const gridCols = `minmax(220px,1fr) repeat(${DOMAIN.measures.length},minmax(72px,96px))`;
 
   app.innerHTML = `
     <div class="header">
@@ -572,7 +571,6 @@ function render(){
             <div class="thead" style="grid-template-columns:${gridCols}">
               <div>${esc(DOMAIN.levelLabels[DOMAIN.hierarchy[0]]||'')} / Задача</div>
               ${DOMAIN.measures.map(m=>`<div class="r">${esc(m.label)}</div>`).join('')}
-              <div class="r"></div>
             </div>
             ${V.filtered.length ? buildTree(V.filtered,0,[]).map(n=>nodeHtml(n,gridCols)).join('')
                                 : '<div class="empty">Нет задач под текущие фильтры</div>'}
@@ -703,7 +701,6 @@ function nodeHtml(node, gridCols){
   const row = `<div class="noderow ${node.depth>=1?'lvl1':''} ${isOpen?'open':''}" style="grid-template-columns:${gridCols}" data-act="expand" data-id="${esc(id)}">
       <div class="nm ${struck?'struck':''}"><span class="chev">▶</span>${esc(node.key)}</div>
       ${cells}
-      <div class="r"><button class="pill ${own?'':'off'}" data-act="toggleEx" data-id="${esc(id)}" data-stop="1">${own?DOMAIN.status.on:DOMAIN.status.off}</button></div>
     </div>`;
   let inner = '';
   if(isOpen){
@@ -740,7 +737,6 @@ function leafHtml(rec, gridCols){
       ${meta?`<div style="margin-top:3px">${meta}</div>`:''}
     </div>
     ${cells}
-    <div class="r"><button class="pill ${own?'':'off'}" data-act="toggleEx" data-id="L:${rec._id}">${own?DOMAIN.status.on:DOMAIN.status.off}</button></div>
   </div>`;
 }
 
