@@ -473,15 +473,21 @@ const SCHEDULE_SCENARIOS = {
    4 даты «на контроле руководства» (презентация дорожной карты 08.07.2026).
    Статус вех считается относительно state.analysisDate, но НЕ влияет на
    статусы задач, KPI и блок ближайших дедлайнов. */
+/* Дата вехи берётся из связанной задачи АКТИВНОГО сценария (match) — чтобы всегда
+   совпадать с планом; date — исходная дата деска (fallback, если задача не найдена). */
 const MANAGEMENT_MILESTONES = [
   { date:'2026-10-29', title:'Готовность установки ЦСР ФИАС на КОЭ', contour:'КОЭ',
-    source:'стр. 10, Веха 1 / стр. 5, ключевая веха' },
+    source:'стр. 10, Веха 1 / стр. 5, ключевая веха',
+    match:r=>r.contour==='КОЭ' && r.name==='Готовность установки ЦСР ФИАС на КОЭ' },
   { date:'2026-12-08', title:'Первая демонстрация заказчику на КОЭ', contour:'КОЭ',
-    source:'стр. 10, Веха 2' },
+    source:'стр. 10, Веха 2',
+    match:r=>r.contour==='КОЭ' && r.name==='Провести демонстрацию заказчику на КОЭ' },
   { date:'2026-12-15', title:'Демо на промышленных данных', contour:'КОЭ',
-    source:'стр. 10, Веха 3 / стр. 7, ключевая веха' },
+    source:'стр. 10, Веха 3 / стр. 7, ключевая веха',
+    match:r=>r.contour==='КОЭ' && /демонстрац/i.test(r.name) && /промышленн/i.test(r.name) },
   { date:'2027-07-28', title:'Демонстрация на КПЭ — боевой контур', contour:'КПЭ',
-    source:'стр. 10, Веха 4 / стр. 9, главная веха проекта', main:true },
+    source:'стр. 10, Веха 4 / стр. 9, главная веха проекта', main:true,
+    match:r=>r.contour==='КПЭ' && /демонстрац/i.test(r.name) && !/временного/i.test(r.name) },
 ];
 
 /* ===== 3. ENGINE — ПРЕДМЕТНО-НЕЗАВИСИМОЕ ЯДРО ============================== */
@@ -916,10 +922,18 @@ function milestoneStatus(n){
   return { key:'Впереди', tone:'ahead' };
 }
 // блок «Вехи на контроле руководства»
+// дата вехи = финиш связанной задачи активного сценария (иначе — дата деска)
+function milestoneDate(m){
+  if(m.match){
+    const hits = RECORDS.filter(m.match).map(r=>parseDate(r.finish)).filter(Boolean);
+    if(hits.length) return new Date(Math.max(...hits.map(d=>d.getTime())));
+  }
+  return parseDate(m.date);
+}
 function milestonesHtml(){
   const aDate = parseDate(state.analysisDate) || midnight(new Date());
   return MANAGEMENT_MILESTONES.map(m=>{
-    const d = parseDate(m.date);
+    const d = milestoneDate(m);
     const left = diffDays(d, aDate);
     const st = milestoneStatus(left);
     return `<div class="ms-row ${st.tone} ${m.main?'main':''}">
