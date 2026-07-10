@@ -179,6 +179,12 @@
   .planctl .pill.off { border-color:var(--acc); background:var(--acc); color:var(--accInk); }
   .morebar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 18px;
     border-top:1px solid var(--bord); font-size:12.5px; color:var(--mut); background:var(--panel2); }
+
+  /* бейдж активного сценария в шапке */
+  .scbadge { display:inline-block; vertical-align:middle; margin-left:10px; padding:3px 11px; border-radius:8px;
+    font-size:12px; font-weight:700; letter-spacing:.01em; border:1px solid rgba(255,255,255,.35); }
+  .scbadge.main { background:rgba(255,255,255,.14); color:var(--headInk); }
+  .scbadge.optimistic { background:#2c8a6b; color:#fff; border-color:#2c8a6b; }
 </style>
 </head>
 <body>
@@ -485,7 +491,11 @@ const MANAGEMENT_MILESTONES = [
   { date:'2026-12-15', title:'Демо на промышленных данных', contour:'КОЭ',
     source:'стр. 10, Веха 3 / стр. 7, ключевая веха',
     match:r=>r.contour==='КОЭ' && /демонстрац/i.test(r.name) && /промышленн/i.test(r.name) },
-  { date:'2027-07-28', title:'Демонстрация на КПЭ — боевой контур', contour:'КПЭ',
+  // веха только оптимистичного сценария: демонстрация временного решения КПЭ (пром. запуск)
+  { title:'Временное решение на КПЭ (пром. запуск)', contour:'КПЭ',
+    source:'ускоренный сценарий · демо временного решения', optional:true,
+    match:r=>r.contour==='КПЭ' && /демонстрац/i.test(r.name) && /временного/i.test(r.name) },
+  { date:'2027-07-28', title:'Демонстрация на КПЭ — боевой контур (целевое решение)', contour:'КПЭ',
     source:'стр. 10, Веха 4 / стр. 9, главная веха проекта', main:true,
     match:r=>r.contour==='КПЭ' && /демонстрац/i.test(r.name) && !/временного/i.test(r.name) },
 ];
@@ -725,7 +735,7 @@ function render(){
     <div class="header">
       <div>
         <div class="kicker">${esc(DOMAIN.subtitle)} · дата анализа ${esc(fmtDateFull(parseDate(state.analysisDate)))}</div>
-        <h1>${esc(DOMAIN.title)}</h1>
+        <h1>${esc(DOMAIN.title)} <span class="scbadge ${esc(state.scenario)}">${esc(activeScenario().label)}</span></h1>
       </div>
       <div style="display:flex;align-items:center;gap:18px;">
         <div class="total"><div class="lbl">Всего задач</div><div class="val">${fmtNum(V.counts.total)}</div></div>
@@ -768,7 +778,7 @@ function render(){
 
         <div class="card">
           <div class="cap"><h2>Вехи на контроле руководства</h2>
-            <span class="muted" style="font-size:12px">на ${esc(fmtDateFull(parseDate(state.analysisDate)))} · 4 контрольные даты</span>
+            <span class="muted" style="font-size:12px">на ${esc(fmtDateFull(parseDate(state.analysisDate)))} · ${milestonesCount()} контрольные даты</span>
           </div>
           <div class="milestones">${milestonesHtml()}</div>
         </div>
@@ -928,12 +938,15 @@ function milestoneDate(m){
     const hits = RECORDS.filter(m.match).map(r=>parseDate(r.finish)).filter(Boolean);
     if(hits.length) return new Date(Math.max(...hits.map(d=>d.getTime())));
   }
-  return parseDate(m.date);
+  return m.date ? parseDate(m.date) : null;   // optional-веха без задачи в сценарии → нет даты
 }
+// количество показываемых вех в активном сценарии (для подписи)
+function milestonesCount(){ return MANAGEMENT_MILESTONES.filter(m=>milestoneDate(m)).length; }
 function milestonesHtml(){
   const aDate = parseDate(state.analysisDate) || midnight(new Date());
   return MANAGEMENT_MILESTONES.map(m=>{
     const d = milestoneDate(m);
+    if(!d) return '';                          // optional-веха отсутствует в этом сценарии — не показываем
     const left = diffDays(d, aDate);
     const st = milestoneStatus(left);
     return `<div class="ms-row ${st.tone} ${m.main?'main':''}">
