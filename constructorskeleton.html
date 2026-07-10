@@ -153,6 +153,26 @@
   .dl-left { display:block; font-size:11px; color:var(--mut); }
   .dl-left.over { color:var(--warn); font-weight:700; }
   .dl-left.risk { color:#a23b72; font-weight:700; }
+
+  /* блок «Вехи на контроле руководства» */
+  .milestones { padding:4px 12px 12px; display:flex; flex-direction:column; }
+  .ms-row { display:flex; align-items:center; gap:14px; padding:11px 8px; border-top:1px solid var(--bordSoft); }
+  .ms-row:first-child { border-top:none; }
+  .ms-row.main { background:color-mix(in srgb, var(--acc) 9%, transparent); border-radius:10px;
+    border:1px solid color-mix(in srgb, var(--acc) 45%, var(--bord)); margin-top:4px; }
+  .ms-date { flex:none; width:104px; font-weight:800; font-size:15px; color:var(--acc); }
+  .ms-row.done .ms-date { color:var(--mut); }
+  .ms-main { flex:1; min-width:0; }
+  .ms-title { font-size:13.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ms-row.main .ms-title { font-size:14.5px; }
+  .ms-meta { font-size:11px; color:var(--mut); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ms-src { opacity:.75; }
+  .ms-right { flex:none; text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:3px; }
+  .ms-badge { padding:3px 10px; border-radius:7px; font-size:10.5px; font-weight:700; color:#fff; }
+  .ms-badge.done  { background:var(--mut); }
+  .ms-badge.soon  { background:#c0852d; }
+  .ms-badge.ahead { background:#3a7ca5; }
+  .ms-left { font-size:11.5px; color:var(--mut); }
 </style>
 </head>
 <body>
@@ -336,6 +356,21 @@ function r(contour, stage, name, dur, start, finish, pct, deadline, pred, member
   return { contour, stage, name, dur, start, finish, pct: pct||0,
            deadline: deadline||null, pred, members, responsible, tasks: 1 };
 }
+
+/* ===== 2b. УПРАВЛЕНЧЕСКИЕ ВЕХИ — отдельно от DATA и от поля deadline ========
+   4 даты «на контроле руководства» (презентация дорожной карты 08.07.2026).
+   Статус вех считается относительно state.analysisDate, но НЕ влияет на
+   статусы задач, KPI и блок ближайших дедлайнов. */
+const MANAGEMENT_MILESTONES = [
+  { date:'2026-10-29', title:'Готовность установки ЦСР ФИАС на КОЭ', contour:'КОЭ',
+    source:'стр. 10, Веха 1 / стр. 5, ключевая веха' },
+  { date:'2026-12-08', title:'Первая демонстрация заказчику на КОЭ', contour:'КОЭ',
+    source:'стр. 10, Веха 2' },
+  { date:'2026-12-15', title:'Демо на промышленных данных', contour:'КОЭ',
+    source:'стр. 10, Веха 3 / стр. 7, ключевая веха' },
+  { date:'2027-07-28', title:'Демонстрация на КПЭ — боевой контур', contour:'КПЭ',
+    source:'стр. 10, Веха 4 / стр. 9, главная веха проекта', main:true },
+];
 
 /* ===== 3. ENGINE — ПРЕДМЕТНО-НЕЗАВИСИМОЕ ЯДРО ============================== */
 
@@ -563,6 +598,13 @@ function render(){
         </div>
 
         <div class="card">
+          <div class="cap"><h2>Вехи на контроле руководства</h2>
+            <span class="muted" style="font-size:12px">на ${esc(fmtDateFull(parseDate(state.analysisDate)))} · 4 контрольные даты</span>
+          </div>
+          <div class="milestones">${milestonesHtml()}</div>
+        </div>
+
+        <div class="card">
           <div class="cap"><h2>Ближайшие дедлайны</h2>
             <span class="muted" style="font-size:12px">на ${esc(fmtDate(parseDate(state.analysisDate)))} · незавершённые</span>
           </div>
@@ -676,6 +718,39 @@ function deadlinesHtml(V){
         <div class="dl-meta">${esc(rec.contour)} · ${esc(rec.stage)} · ${esc(rec.responsible)}</div>
       </div>
       <div class="dl-date"><b>${esc(rec._dueLabel)}</b><span class="dl-left ${tone}">${esc(daysPhrase(rec._daysLeft))}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// подпись остатка дней для вехи (нейтральная, без «просрочено»)
+function milestonePhrase(n){
+  if(n<0)  return Math.abs(n)+' дн назад';
+  if(n===0) return 'сегодня';
+  return 'через '+n+' дн';
+}
+// статус вехи относительно даты анализа
+function milestoneStatus(n){
+  if(n<0) return { key:'Пройдена', tone:'done' };
+  if(n<=30) return { key:'Скоро',   tone:'soon' };
+  return { key:'Впереди', tone:'ahead' };
+}
+// блок «Вехи на контроле руководства»
+function milestonesHtml(){
+  const aDate = parseDate(state.analysisDate) || midnight(new Date());
+  return MANAGEMENT_MILESTONES.map(m=>{
+    const d = parseDate(m.date);
+    const left = diffDays(d, aDate);
+    const st = milestoneStatus(left);
+    return `<div class="ms-row ${st.tone} ${m.main?'main':''}">
+      <div class="ms-date">${esc(fmtDateFull(d))}</div>
+      <div class="ms-main">
+        <div class="ms-title">${m.main?'★ ':''}${esc(m.title)}</div>
+        <div class="ms-meta">${esc(m.contour)}${m.main?' · главная веха проекта':''} · <span class="ms-src">${esc(m.source)}</span></div>
+      </div>
+      <div class="ms-right">
+        <span class="ms-badge ${st.tone}">${esc(st.key)}</span>
+        <span class="ms-left">${esc(milestonePhrase(left))}</span>
+      </div>
     </div>`;
   }).join('');
 }
