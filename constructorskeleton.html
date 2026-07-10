@@ -173,6 +173,12 @@
   .ms-badge.soon  { background:#c0852d; }
   .ms-badge.ahead { background:#3a7ca5; }
   .ms-left { font-size:11.5px; color:var(--mut); }
+
+  /* панель управления полным планом */
+  .planctl { display:flex; flex-wrap:wrap; gap:6px; }
+  .planctl .pill.off { border-color:var(--acc); background:var(--acc); color:var(--accInk); }
+  .morebar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 18px;
+    border-top:1px solid var(--bord); font-size:12.5px; color:var(--mut); background:var(--panel2); }
 </style>
 </head>
 <body>
@@ -549,13 +555,34 @@ const state = {
   dim: DOMAIN.breakdownDims[0],
   analysisDate: DEFAULT_ANALYSIS_DATE,          // ISO; дата анализа. Дефолт — снимок 08.07.2026 (не «сегодня»); кнопка «Сегодня» переключает на todayISO()
   scenario: 'main',                             // активный сценарий план-графика (по умолчанию — основной план)
+  expandAll: false,                             // «Показать весь план» — раскрыть все уровни дерева
+  leafLimit: 40,                                // сколько задач-листьев показывать; null = без лимита («Показать ещё» +40)
 };
+
+// быстрые кнопки «Найти в плане» (ключевые слова — стеммы, чтобы ловить рус. склонения; OR по запятым)
+const QUICK_FINDS = [
+  { label:'Серверы / GPU',      q:'сервер,GPU,оборудован,Дубна,Городец' },
+  { label:'Тестирование ADP',   q:'ADP,АДП' },
+  { label:'Тестирование КОЭ',   q:'тестировани,промышленн' },
+  { label:'Демонстрации',       q:'демонстрац,заказчик' },
+  { label:'МПИД',               q:'МПИД,матриц,схема,профиль трафика' },
+  { label:'Промышленные данные',q:'промышленн,перенос' },
+];
+// активны ли поиск/фильтры (тогда дерево авто-раскрывается, чтобы найденное было видно)
+function filtersActive(){
+  if(state.search.trim()) return true;
+  return DOMAIN.facets.some(f=>state.filters[f.key].size>0);
+}
+// контекст рендера дерева (форс-раскрытие + лимит листьев)
+let FORCE_OPEN = false;
+let LEAF_CTX = { limit:null, shown:0, hidden:0 };
 
 // переключение сценария: пересобрать записи и сбросить завязанное на id состояние
 function setScenario(name){
   if(!SCHEDULE_SCENARIOS[name] || name===state.scenario) return;
   state.scenario = name;
   state.excluded = {}; state.qty = {}; state.expanded = {};
+  state.expandAll = false; state.leafLimit = 40;
   rebuildRecords();
   uniq(RECORDS.map(r=>r[DOMAIN.hierarchy[0]])).forEach(g=>state.expanded[nodeId([g])]=true);
   render();
@@ -617,8 +644,13 @@ function passFilter(rec){
   }
   const q = state.search.trim().toLowerCase();
   if(q){
-    const hay = [rec[DOMAIN.itemLabel], rec[DOMAIN.itemSub], ...DOMAIN.hierarchy.map(l=>rec[l])].join(' ').toLowerCase();
-    if(!hay.includes(q)) return false;
+    // поиск по всему плану: название, этап, контур, участники, ответственный,
+    // предшественники, даты начала/окончания. Запятая = ИЛИ (для быстрых кнопок).
+    const hay = [ rec[DOMAIN.itemLabel], rec.period, ...DOMAIN.hierarchy.map(l=>rec[l]),
+                  rec.members, rec.responsible, rec.pred, rec.start, rec.finish,
+                  rec.startLabel, rec.finishLabel ].join(' ').toLowerCase();
+    const terms = q.split(',').map(s=>s.trim()).filter(Boolean);
+    if(!terms.some(t=>hay.includes(t))) return false;
   }
   return true;
 }
@@ -676,6 +708,10 @@ function render(){
   recomputeDerived();                        // пересчёт статусов/дедлайнов на дату анализа
   const V = view();
   const app = document.getElementById('app');
+
+  // навигация по дереву: при «Показать весь план» или активном поиске/фильтре — раскрыть всё
+  FORCE_OPEN = state.expandAll || filtersActive();
+  LEAF_CTX = { limit: state.leafLimit, shown:0, hidden:0 };   // счётчик листьев мутируется при обходе дерева
 
   const gridCols = `minmax(220px,1fr) repeat(${DOMAIN.measures.length},minmax(72px,96px))`;
 
@@ -745,15 +781,33 @@ function render(){
           <div class="bars">${barsHtml(V.filtered)}</div>
         </div>
 
-        <div class="card table">
-          <div class="inner">
+        <div class="card">
+          <div class="cap" style="flex-wrap:wrap;gap:8px">
+            <h2>Полный план работ · ${esc(activeScenario().label)}</h2>
+            <div class="planctl">
+              <button class="pill ${state.expandAll?'off':''}" data-act="expandAll">Показать весь план</button>
+              <button class="pill" data-act="collapseAll">Свернуть весь план</button>
+              <button class="pill" data-act="resetSearch">Сбросить поиск и фильтры</button>
+            </div>
+          </div>
+          <div style="padding:0 18px 8px">
+            <div class="muted" style="font-size:11px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px">Найти в плане</div>
+            <div class="chips">
+              ${QUICK_FINDS.map(q=>`<button class="chip ${state.search===q.q?'on':''}" data-act="quick" data-q="${esc(q.q)}">${esc(q.label)}</button>`).join('')}
+            </div>
+            ${state.search?`<div class="muted" style="font-size:12px;margin-top:8px">Найдено задач: <b style="color:var(--ink)">${V.filtered.length}</b> · <button class="pill" data-act="resetSearch">Очистить</button></div>`:''}
+          </div>
+          <div class="table"><div class="inner">
             <div class="thead" style="grid-template-columns:${gridCols}">
               <div>${esc(DOMAIN.levelLabels[DOMAIN.hierarchy[0]]||'')} / Задача</div>
               ${DOMAIN.measures.map(m=>`<div class="r">${esc(m.label)}</div>`).join('')}
             </div>
             ${V.filtered.length ? buildTree(V.filtered,0,[]).map(n=>nodeHtml(n,gridCols)).join('')
                                 : '<div class="empty">Нет задач под текущие фильтры</div>'}
-          </div>
+            ${LEAF_CTX.hidden>0 ? `<div class="morebar">Показано ${LEAF_CTX.shown} из ${LEAF_CTX.shown+LEAF_CTX.hidden} задач
+              <button class="pill" data-act="showMore">Показать ещё ${Math.min(40,LEAF_CTX.hidden)}</button>
+              <button class="pill" data-act="expandAll">Показать весь план</button></div>`:''}
+          </div></div>
         </div>
       </main>
     </div>`;
@@ -902,8 +956,7 @@ function barsHtml(filtered){
 
 function nodeHtml(node, gridCols){
   const id = nodeId(node.path);
-  const open = state.expanded[id] !== false && (state.expanded[id] || node.depth===0 ? true : false);
-  const isOpen = !!state.expanded[id];
+  const isOpen = FORCE_OPEN || !!state.expanded[id];   // при поиске/«Показать весь план» — раскрыто
   const struck = nodeStruck(node.path);
   const own = !state.excluded[id];
   const cells = DOMAIN.measures.map(m=>{
@@ -916,8 +969,16 @@ function nodeHtml(node, gridCols){
     </div>`;
   let inner = '';
   if(isOpen){
-    inner = node.children ? node.children.map(c=>nodeHtml(c,gridCols)).join('')
-                          : node.leaves.map(l=>leafHtml(l,gridCols)).join('');
+    if(node.children){
+      inner = node.children.map(c=>nodeHtml(c,gridCols)).join('');
+    } else {
+      const parts=[];
+      for(const l of node.leaves){
+        if(LEAF_CTX.limit!=null && LEAF_CTX.shown>=LEAF_CTX.limit){ LEAF_CTX.hidden++; continue; }
+        LEAF_CTX.shown++; parts.push(leafHtml(l,gridCols));
+      }
+      inner = parts.join('');
+    }
   }
   return row + inner;
 }
@@ -961,11 +1022,17 @@ document.addEventListener('click', e=>{
   if(act==='theme'){ state.theme=el.dataset.v; render(); }
   else if(act==='dim'){ state.dim=el.dataset.v; render(); }
   else if(act==='filter'){ const s=state.filters[el.dataset.facet]; const v=el.dataset.v; s.has(v)?s.delete(v):s.add(v); render(); }
-  else if(act==='reset'){ DOMAIN.facets.forEach(f=>state.filters[f.key].clear()); state.search=''; state.excluded={}; state.qty={}; render(); }
+  else if(act==='reset'){ DOMAIN.facets.forEach(f=>state.filters[f.key].clear()); state.search=''; state.excluded={}; state.qty={}; state.expandAll=false; state.leafLimit=40; render(); }
   else if(act==='expand'){ if(e.target.closest('[data-stop]')) return; const id=el.dataset.id; state.expanded[id]=!state.expanded[id]; render(); }
   else if(act==='toggleEx'){ e.stopPropagation(); const id=el.dataset.id; state.excluded[id]?delete state.excluded[id]:state.excluded[id]=true; render(); }
   else if(act==='today'){ state.analysisDate=todayISO(); render(); }
   else if(act==='scenario'){ setScenario(el.dataset.v); }
+  // --- навигация по полному плану ---
+  else if(act==='expandAll'){ state.expandAll=true; state.leafLimit=null; render(); }
+  else if(act==='collapseAll'){ state.expandAll=false; state.leafLimit=40; state.expanded={}; uniq(RECORDS.map(r=>r[DOMAIN.hierarchy[0]])).forEach(g=>state.expanded[nodeId([g])]=true); render(); }
+  else if(act==='resetSearch'){ state.search=''; DOMAIN.facets.forEach(f=>state.filters[f.key].clear()); state.expandAll=false; state.leafLimit=40; render(); }
+  else if(act==='showMore'){ state.leafLimit=(state.leafLimit||0)+40; render(); }
+  else if(act==='quick'){ const q=el.dataset.q; state.search = (state.search===q ? '' : q); state.leafLimit=40; render(); }
 });
 document.addEventListener('change', e=>{
   const a = e.target.closest('[data-act="analysis"]');
